@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+tools/imgkit/node_modules/
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# Env
+.env
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Source photography — site serves public/img/; regenerate with npm run assets
+individual image/
+
+# Gated paper files — keep folder README, ignore contents
+private/papers/*
+!private/papers/README.md
+
+# Imgkit / tooling scratch output
+tools/_sheets/
+tools/_preview/
+tools/_preview_sheets/
+tools/_shots/
+tools/_sections/

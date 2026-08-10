@@ -1,0 +1,23 @@
+import { ContactPillarIcon } from "@/components/contact/ContactIcons";
+import { FeatureCard } from "@/components/ui/FeatureCard";
+import { CONTACT_PILLARS } from "@/lib/contact";
+
+/**
+ * Four contact values — separate FeatureCards.
+ */
+export function ContactPillars() {
+  return (
+    <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+      {CONTACT_PILLARS.map((pillar) => (
+        <li key={pillar.id} className="min-w-0">
+          <FeatureCard
+            title={pillar.title}
+            body={pillar.body}
+            align="center"
+            icon={<ContactPillarIcon name={pillar.icon} size={52} />}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}

@@ -1,0 +1,99 @@
+import { Fragment } from "react";
+
+import { Container } from "@/components/ui/Container";
+import { FeatureCard } from "@/components/ui/FeatureCard";
+import { PullQuote } from "@/components/ui/PullQuote";
+import { Reveal } from "@/components/ui/Reveal";
+import { cn } from "@/lib/cn";
+import { CRUCIBLE } from "@/lib/products";
+
+function FlowChevron({ direction }: { direction: "right" | "down" }) {
+  return (
+    <span aria-hidden="true" className="inline-flex text-ist-accent-bright">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
+        {direction === "right" ? (
+          <path
+            d="M9 5l7 7-7 7"
+            stroke="currentColor"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <path
+            d="M5 9l7 7 7-7"
+            stroke="currentColor"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * Crucible workflow — numbered FeatureCard steps.
+ */
+export function CrucibleFlow() {
+  return (
+    <section className="section-y bg-ist-bg">
+      <Container>
+        <Reveal variant="expand">
+          <header className="text-center">
+            <p className="t-tag text-ist-dim">How Crucible works</p>
+            <h2 className="t-h2 mt-4 text-balance text-ist-text">The Crucible Workflow</h2>
+          </header>
+        </Reveal>
+
+        <ol
+          className={cn(
+            "mt-10 grid list-none grid-cols-1 gap-4 p-0 sm:mt-10",
+            "sm:grid-cols-2 sm:gap-5",
+            "xl:flex xl:items-stretch xl:gap-2",
+          )}
+        >
+          {CRUCIBLE.flow.map((step, i) => {
+            const n = i + 1;
+            const isLast = i === CRUCIBLE.flow.length - 1;
+
+            return (
+              <Fragment key={step.key}>
+                <li className="flex min-w-0 flex-col xl:min-w-0 xl:flex-1">
+                  <Reveal index={i} variant="rise" className="flex h-full flex-1 flex-col">
+                    <FeatureCard
+                      index={n}
+                      eyebrow={step.key.toUpperCase()}
+                      title={step.title}
+                      body={step.body}
+                    />
+                  </Reveal>
+
+                  {!isLast ? (
+                    <div aria-hidden="true" className="flex justify-center py-2 sm:hidden">
+                      <FlowChevron direction="down" />
+                    </div>
+                  ) : null}
+                </li>
+
+                {!isLast ? (
+                  <li
+                    aria-hidden="true"
+                    className="hidden w-7 shrink-0 items-center justify-center xl:flex"
+                  >
+                    <FlowChevron direction="right" />
+                  </li>
+                ) : null}
+              </Fragment>
+            );
+          })}
+        </ol>
+
+        <Reveal className="mt-10 lg:mt-12" variant="expand">
+          <PullQuote lead={CRUCIBLE.pull.lead} line={CRUCIBLE.pull.line} />
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
