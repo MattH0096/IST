@@ -10,31 +10,37 @@ import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
 import { LinkRule } from "@/components/ui/LinkRule";
 import { Reveal } from "@/components/ui/Reveal";
+import { getSiteContent } from "@/lib/cms/content";
 import { cn } from "@/lib/cn";
-import { img } from "@/lib/images";
-import { HARDWARE_NOTE, SOLUTIONS_HEADER, SOLUTION_COLUMNS } from "@/lib/solutions";
+import { img } from "@/lib/images.server";
 
-export const metadata: Metadata = {
-  title: "Solutions — Built for Dynamic, Intermittent Networks",
-  description: SOLUTIONS_HEADER.lead,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+  return {
+    title: "Solutions — Built for Dynamic, Intermittent Networks",
+    description: content.solutions.lead,
+  };
+}
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  const content = await getSiteContent();
+  const s = content.solutions;
+
   return (
     <>
       <PageHero
-        eyebrow="Solutions"
-        title={SOLUTIONS_HEADER.titleLines}
-        lead={SOLUTIONS_HEADER.lead}
+        eyebrow={s.eyebrow}
+        title={[s.titleLine1, s.titleLine2]}
+        lead={s.lead}
         video="/video/solutions.mp4"
       />
 
-      <MissingLayer />
+      <MissingLayer content={s} />
 
       <section className="section-y bg-ist-surface">
         <Container>
           <ul className="flex flex-col gap-10 lg:gap-8">
-            {SOLUTION_COLUMNS.map((column, i) => {
+            {s.columns.map((column, i) => {
               const shipping = column.status === "current";
               const asset = img(column.image);
               const imageFirst = i % 2 === 0;
@@ -89,7 +95,7 @@ export default function SolutionsPage() {
                             {column.cta}
                           </Button>
                         ) : (
-                          <p className="t-tag text-ist-dim">{HARDWARE_NOTE}</p>
+                          <p className="t-tag text-ist-dim">{s.hardwareNote}</p>
                         )}
                       </div>
                     </div>
@@ -101,8 +107,8 @@ export default function SolutionsPage() {
         </Container>
       </section>
 
-      <SolutionsFullStack />
-      <SolutionsCta />
+      <SolutionsFullStack content={s} />
+      <SolutionsCta content={s} />
     </>
   );
 }

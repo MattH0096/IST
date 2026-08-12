@@ -122,10 +122,20 @@
        autofill, form controls — in dark. Without it a select's option list
        opens as a white panel in the middle of a dark page. */
     color-scheme: dark;
-    scroll-behavior: smooth;
+    /* Lenis owns smooth scrolling; CSS smooth fights the lerp and feels jumpy. */
+    scroll-behavior: auto;
     /* Sticky nav is 72px; keep anchored sections clear of it. */
     scroll-padding-top: 88px;
     -webkit-text-size-adjust: 100%;
+  }
+
+  html.lenis,
+  html.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   body {

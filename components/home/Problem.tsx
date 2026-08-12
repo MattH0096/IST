@@ -4,13 +4,24 @@ import { PsIcon } from "@/components/icons/ProblemSolutionIcons";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { PROBLEM } from "@/lib/home";
-import { img } from "@/lib/images";
+import type { SiteContent } from "@/lib/cms/content";
+import { img } from "@/lib/images.server";
+
+type Props = {
+  content: Pick<
+    SiteContent["home"],
+    | "problemEyebrow"
+    | "problemHeading1"
+    | "problemHeading2"
+    | "problemConditions"
+    | "problemCloser"
+  >;
+};
 
 /**
  * §9.1.3 — Problem. Split: outside → in. Condition lines: one-by-one rise.
  */
-export function Problem() {
+export function Problem({ content }: Props) {
   const asset = img("section-problem");
 
   return (
@@ -21,17 +32,17 @@ export function Problem() {
             <Reveal variant="fromLeft">
               <p className="t-eyebrow flex items-center gap-2.5 text-ist-accent-bright">
                 <PsIcon name="mark" size={18} className="shrink-0 text-ist-accent-bright" />
-                The Problem
+                {content.problemEyebrow}
               </p>
               <h2 className="ps-heading mt-5 text-ist-text">
-                <span className="block">{PROBLEM.headingLines[0]}</span>
-                <span className="block">{PROBLEM.headingLines[1]}</span>
+                <span className="block">{content.problemHeading1}</span>
+                <span className="block">{content.problemHeading2}</span>
               </h2>
             </Reveal>
 
             <ul className="mt-10 grid grid-cols-1 gap-y-5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-8">
-              {PROBLEM.conditions.map((item, i) => (
-                <Reveal key={item.line} as="li" index={i} step={100} variant="rise">
+              {content.problemConditions.map((item, i) => (
+                <Reveal key={`${item.line}-${i}`} as="li" index={i} step={100} variant="rise">
                   <div className="flex items-start gap-2.5 sm:gap-3">
                     <PsIcon
                       name={item.icon}
@@ -48,7 +59,7 @@ export function Problem() {
 
             <Reveal className="mt-8 sm:mt-10" index={4} step={80} variant="rise">
               <p className="max-w-xl text-[0.95rem] leading-relaxed text-ist-muted sm:text-base">
-                {PROBLEM.closer}
+                {content.problemCloser}
               </p>
             </Reveal>
           </div>

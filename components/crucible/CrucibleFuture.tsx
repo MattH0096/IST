@@ -1,9 +1,13 @@
 import { Container } from "@/components/ui/Container";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { Reveal } from "@/components/ui/Reveal";
-import { CRUCIBLE } from "@/lib/products";
+import type { SiteContent } from "@/lib/cms/content";
 
-type PillarKey = (typeof CRUCIBLE.future.pillars)[number]["key"];
+type Props = {
+  content: SiteContent["crucible"];
+};
+
+type PillarKey = SiteContent["crucible"]["pillars"][number]["key"];
 
 /**
  * Premium square marks sized for the FeatureCard icon plate.
@@ -92,20 +96,20 @@ function PillarArt({ name }: { name: PillarKey }) {
 /**
  * Future extensibility — vision pillars on shared FeatureCard chrome.
  */
-export function CrucibleFuture() {
+export function CrucibleFuture({ content }: Props) {
   return (
     <section className="section-y bg-ist-bg">
       <Container>
         <Reveal variant="expand" className="mx-auto max-w-4xl text-center">
-          <p className="t-tag text-ist-dim">{CRUCIBLE.future.tag}</p>
+          <p className="t-tag text-ist-dim">{content.futureTag}</p>
           <p className="mt-5 text-[1.05rem] font-medium text-ist-muted sm:text-[1.15rem]">
-            {CRUCIBLE.future.eyebrow}
+            {content.futureEyebrow}
           </p>
-          <h2 className="t-h2 mt-2 text-balance text-ist-text">{CRUCIBLE.future.heading}</h2>
+          <h2 className="t-h2 mt-2 text-balance text-ist-text">{content.futureHeading}</h2>
         </Reveal>
 
         <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-          {CRUCIBLE.future.pillars.map((pillar, i) => (
+          {content.pillars.map((pillar, i) => (
             <Reveal
               key={pillar.key}
               as="li"

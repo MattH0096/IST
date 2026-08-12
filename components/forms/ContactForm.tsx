@@ -24,6 +24,24 @@ import { cn } from "@/lib/cn";
 
 type Status = "idle" | "sending" | "sent" | "failed";
 
+export type ContactFormCopy = {
+  title: string;
+  lead: string;
+  secure: string;
+  submit: string;
+  placeholders: {
+    fullName: string;
+    workEmail: string;
+    organization: string;
+    interest: string;
+    message: string;
+  };
+};
+
+type Props = {
+  copy?: ContactFormCopy;
+};
+
 const contactControl = cn(
   controlClass,
   "rounded-none border-ist-line bg-black placeholder:text-ist-dim",
@@ -34,7 +52,14 @@ const contactLabel = "font-medium normal-case tracking-normal text-ist-text text
 /**
  * Contact enquiry form — stacked fields, full-width send, security note.
  */
-export function ContactForm() {
+export function ContactForm({ copy }: Props) {
+  const form = copy ?? {
+    title: CONTACT_FORM.title,
+    lead: CONTACT_FORM.lead,
+    secure: CONTACT_FORM.secure,
+    submit: CONTACT_FORM.submit,
+    placeholders: { ...CONTACT_FORM.placeholders },
+  };
   const prefix = useId();
   const [values, setValues] = useState<ContactValues>(EMPTY_CONTACT);
   const [errors, setErrors] = useState<ContactErrors>({});
@@ -145,10 +170,10 @@ export function ContactForm() {
           <span className="text-ist-accent-bright">
             <ContactMessageIcon size={22} />
           </span>
-          {CONTACT_FORM.title}
+          {form.title}
         </p>
         <p className="mt-2 max-w-xl text-[0.9rem] leading-relaxed text-ist-muted">
-          {CONTACT_FORM.lead}
+          {form.lead}
         </p>
       </div>
 
@@ -165,7 +190,7 @@ export function ContactForm() {
             name="fullName"
             type="text"
             autoComplete="name"
-            placeholder={CONTACT_FORM.placeholders.fullName}
+            placeholder={form.placeholders.fullName}
             className={contactControl}
             value={values.fullName}
             onChange={(e) => set("fullName")(e.target.value)}
@@ -186,7 +211,7 @@ export function ContactForm() {
             name="workEmail"
             type="email"
             autoComplete="email"
-            placeholder={CONTACT_FORM.placeholders.workEmail}
+            placeholder={form.placeholders.workEmail}
             className={contactControl}
             value={values.workEmail}
             onChange={(e) => set("workEmail")(e.target.value)}
@@ -206,7 +231,7 @@ export function ContactForm() {
             name="organization"
             type="text"
             autoComplete="organization"
-            placeholder={CONTACT_FORM.placeholders.organization}
+            placeholder={form.placeholders.organization}
             className={contactControl}
             value={values.organization}
             onChange={(e) => set("organization")(e.target.value)}
@@ -234,7 +259,7 @@ export function ContactForm() {
               aria-invalid={Boolean(errors.interest)}
               aria-describedby={errors.interest ? `${fieldId("interest")}-error` : undefined}
             >
-              <option value="">{CONTACT_FORM.placeholders.interest}</option>
+              <option value="">{form.placeholders.interest}</option>
               {INTEREST_OPTIONS.map((option) => (
                 <option key={option} value={option}>
                   {option}
@@ -261,7 +286,7 @@ export function ContactForm() {
             id={fieldId("message")}
             name="message"
             rows={5}
-            placeholder={CONTACT_FORM.placeholders.message}
+            placeholder={form.placeholders.message}
             className={cn(contactControl, "resize-y")}
             value={values.message}
             onChange={(e) => set("message")(e.target.value)}
@@ -286,7 +311,7 @@ export function ContactForm() {
       >
         <span className="inline-flex items-center gap-2.5">
           <ContactSendIcon size={16} />
-          {sending ? "Sending…" : CONTACT_FORM.submit}
+          {sending ? "Sending…" : form.submit}
         </span>
       </Button>
 
@@ -294,7 +319,7 @@ export function ContactForm() {
         <span className="mt-0.5 shrink-0 text-ist-accent-bright">
           <ContactShieldIcon size={13} />
         </span>
-        {CONTACT_FORM.secure}
+        {form.secure}
       </p>
     </form>
   );

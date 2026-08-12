@@ -3,20 +3,24 @@ import Image from "next/image";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
+import type { SiteContent } from "@/lib/cms/content";
 import { cn } from "@/lib/cn";
-import { ABOUT } from "@/lib/about";
-import { img, type ImageKey } from "@/lib/images";
+import { img, type ImageKey } from "@/lib/images.server";
+
+type Props = {
+  content: SiteContent["about"];
+};
 
 /**
  * Our Mission / Our Vision — text|image then image|text.
  * Wider image; black edge gradient into the copy (no blur).
  */
-export function AboutMissionVision() {
+export function AboutMissionVision({ content }: Props) {
   return (
     <section className="section-y bg-ist-bg pt-0">
       <Container>
         <ul className="flex flex-col gap-5 lg:gap-6">
-          {ABOUT.cards.map((card, i) => {
+          {content.cards.map((card, i) => {
             const asset = img(card.image as ImageKey);
             const imageFirst = i % 2 === 1;
 

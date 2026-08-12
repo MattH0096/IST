@@ -6,41 +6,48 @@ import { LocusDistribution } from "@/components/locus/LocusDistribution";
 import { LocusFlow } from "@/components/locus/LocusFlow";
 import { LocusImpact } from "@/components/locus/LocusImpact";
 import { LocusWhyChoose } from "@/components/locus/LocusWhyChoose";
-import { LOCUS_CTA } from "@/lib/cta";
-import { LOCUS } from "@/lib/products";
+import { getSiteContent } from "@/lib/cms/content";
 
-export const metadata: Metadata = {
-  title: "Locus — Assured Distribution for the Real World",
-  description: LOCUS.lead,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+  return {
+    title: "Locus — Assured Distribution for the Real World",
+    description: content.locus.lead,
+  };
+}
 
-export default function LocusPage() {
+export default async function LocusPage() {
+  const content = await getSiteContent();
+  const c = content.locus;
+
   return (
     <>
       <PageHero
-        eyebrow="Locus — Current, shipping"
-        title={
-          <>
-            <span className="block">
-              <span className="text-ist-accent-bright">Locus</span>
-              {": Assured Distribution"}
-            </span>
-            <span className="block">{LOCUS.titleLines[1]}</span>
-          </>
-        }
-        lead={LOCUS.lead}
+        eyebrow={c.eyebrow}
+        title={[c.titleLine1, c.titleLine2]}
+        lead={c.lead}
         video="/video/Locus_Assured_Distribution_fo.mp4"
       />
 
-      <LocusFlow />
+      <LocusFlow content={c} />
 
-      <LocusDistribution />
+      <LocusDistribution content={c} />
 
-      <LocusImpact />
+      <LocusImpact content={c} />
 
-      <LocusWhyChoose />
+      <LocusWhyChoose content={c} />
 
-      <ClosingCta copy={LOCUS_CTA} />
+      <ClosingCta
+        copy={{
+          lines: [c.visionLine1, c.visionLine2],
+          accentLine: c.visionAccent,
+          afterLines: [c.visionAfter1, c.visionAfter2],
+          primaryCta: c.visionPrimaryCta,
+          primaryHref: c.visionPrimaryHref,
+          secondaryCta: c.visionSecondaryCta,
+          secondaryHref: c.visionSecondaryHref,
+        }}
+      />
     </>
   );
 }

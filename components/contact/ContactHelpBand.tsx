@@ -3,12 +3,20 @@ import { BandCard } from "@/components/ui/BandBackdrop";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { CONTACT_HELP } from "@/lib/contact";
-import { img } from "@/lib/images";
+import { img } from "@/lib/images.server";
+
+type Props = {
+  heading?: string;
+  lead?: string;
+};
 
 /**
  * Closing help band — “We are here to help you” plate, no CTAs.
  */
-export function ContactHelpBand() {
+export function ContactHelpBand({
+  heading = CONTACT_HELP.heading,
+  lead = CONTACT_HELP.lead,
+}: Props) {
   const asset = img("band-contact-help");
 
   return (
@@ -32,11 +40,9 @@ export function ContactHelpBand() {
                 <ContactBroadcastIcon size={22} />
               </span>
               <h2 className="mt-5 text-[1.25rem] font-semibold leading-snug tracking-tight text-ist-text sm:text-[1.45rem] lg:text-[1.6rem]">
-                {CONTACT_HELP.heading}
+                {heading}
               </h2>
-              <p className="mt-3 text-[0.95rem] text-ist-muted sm:text-[1.05rem]">
-                {CONTACT_HELP.lead}
-              </p>
+              <p className="mt-3 text-[0.95rem] text-ist-muted sm:text-[1.05rem]">{lead}</p>
             </div>
           </BandCard>
         </Reveal>

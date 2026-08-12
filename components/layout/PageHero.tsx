@@ -1,10 +1,10 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-import { GlassSupportPanel } from "@/components/ui/GlassSupportPanel";
+import { CmsSupportPanel } from "@/components/ui/CmsSupportPanel";
 import { HeroVideoBackground } from "@/components/ui/HeroVideoBackground";
 import { Container } from "@/components/ui/Container";
-import { img, type ImageKey } from "@/lib/images";
+import { img, type ImageKey } from "@/lib/images.server";
 
 type Props = {
   eyebrow?: string;
@@ -113,7 +113,7 @@ export function PageHero({
         </div>
       </Container>
 
-      <GlassSupportPanel />
+      <CmsSupportPanel />
     </section>
   );
 }

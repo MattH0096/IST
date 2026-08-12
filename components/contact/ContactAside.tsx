@@ -21,10 +21,26 @@ function SocialMark({ label }: { label: string }) {
   );
 }
 
+type Props = {
+  officeTitle?: string;
+  location?: string;
+  description?: string;
+  mapAlt?: string;
+  socialTitle?: string;
+  socialLead?: string;
+};
+
 /**
  * Right column — office location, Colorado map, LinkedIn.
  */
-export function ContactAside() {
+export function ContactAside({
+  officeTitle = CONTACT_OFFICE.title,
+  location = CONTACT_OFFICE.location,
+  description = CONTACT_OFFICE.description,
+  mapAlt = CONTACT_OFFICE.mapAlt,
+  socialTitle = CONTACT_SOCIAL.title,
+  socialLead = CONTACT_SOCIAL.lead,
+}: Props) {
   return (
     <aside className="flex h-full flex-col border border-ist-line bg-[#0a0a0a] p-5 sm:p-6 lg:p-7">
       <div>
@@ -32,20 +48,18 @@ export function ContactAside() {
           <span className="text-ist-accent-bright">
             <ContactPinIcon size={18} />
           </span>
-          {CONTACT_OFFICE.title}
+          {officeTitle}
         </p>
 
         <p className="mt-5 text-[1.35rem] font-semibold tracking-tight text-ist-text sm:text-[1.5rem]">
-          {CONTACT_OFFICE.location}
+          {location}
         </p>
         <div aria-hidden="true" className="mt-2 h-px w-14 bg-ist-accent" />
 
-        <p className="mt-4 text-[0.9rem] leading-relaxed text-ist-muted">
-          {CONTACT_OFFICE.description}
-        </p>
+        <p className="mt-4 text-[0.9rem] leading-relaxed text-ist-muted">{description}</p>
 
         <div className="relative mt-5 overflow-hidden border border-ist-line bg-black">
-          <ContactColoradoMap />
+          <ContactColoradoMap mapAlt={mapAlt} />
         </div>
       </div>
 
@@ -54,11 +68,9 @@ export function ContactAside() {
           <span className="text-ist-accent-bright">
             <ContactNetworkIcon size={18} />
           </span>
-          {CONTACT_SOCIAL.title}
+          {socialTitle}
         </p>
-        <p className="mt-2 text-[0.875rem] leading-relaxed text-ist-muted">
-          {CONTACT_SOCIAL.lead}
-        </p>
+        <p className="mt-2 text-[0.875rem] leading-relaxed text-ist-muted">{socialLead}</p>
 
         <ul className="mt-4 divide-y divide-ist-line border-y border-ist-line">
           {SOCIALS.map((social) => {

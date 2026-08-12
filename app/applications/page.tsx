@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { ClosingCta } from "@/components/sections/ClosingCta";
-import { BandBackdrop } from "@/components/ui/BandBackdrop";
+import { BandCard } from "@/components/ui/BandBackdrop";
 import { Button } from "@/components/ui/Button";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
@@ -11,7 +11,7 @@ import { LinkRule } from "@/components/ui/LinkRule";
 import { Reveal } from "@/components/ui/Reveal";
 import { APPLICATIONS } from "@/lib/home";
 import { APPLICATIONS_CTA } from "@/lib/cta";
-import { img } from "@/lib/images";
+import { img } from "@/lib/images.server";
 import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
@@ -83,28 +83,36 @@ export default function ApplicationsPage() {
         })}
       </div>
 
-      <section className="group relative isolate overflow-hidden bg-ist-bg">
-        <BandBackdrop
-          src={band.src}
-          width={band.width}
-          height={band.height}
-          mode="bleed"
-          pinLeft
-          greyscale
-        />
-        <Container className="relative z-10 flex min-h-[min(48svh,26rem)] items-center justify-center py-16 sm:min-h-[min(52svh,30rem)] sm:py-20 lg:py-24">
-          <Reveal variant="expand" className="w-full">
-            <div className="mx-auto w-full max-w-2xl text-center sm:max-w-3xl">
-              <h2 className="t-h2 text-balance text-ist-text">{APPLICATIONS.closer.heading}</h2>
-              <p className="t-body mx-auto mt-5 max-w-2xl text-pretty text-ist-text/90">
-                {APPLICATIONS.closer.body}
-              </p>
-              <div className="mt-8 flex justify-center">
-                <Button href={APPLICATIONS.closer.href} variant="secondary" withArrow>
-                  {APPLICATIONS.closer.cta}
-                </Button>
+      <section
+        className="section-y bg-ist-bg pt-0"
+        aria-label={APPLICATIONS.closer.heading}
+      >
+        <Container>
+          <Reveal variant="expand">
+            <BandCard
+              src={band.src}
+              width={band.width}
+              height={band.height}
+              pinLeft
+              viewportClassName="min-h-[min(42svh,24rem)]"
+              contentClassName="justify-center py-10 sm:py-12 lg:py-14"
+            >
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"
+              />
+              <div className="relative z-10 mx-auto w-full max-w-2xl text-center sm:max-w-3xl">
+                <h2 className="t-h2 text-balance text-ist-text">{APPLICATIONS.closer.heading}</h2>
+                <p className="t-body mx-auto mt-5 max-w-2xl text-pretty text-ist-text/90">
+                  {APPLICATIONS.closer.body}
+                </p>
+                <div className="mt-8 flex justify-center">
+                  <Button href={APPLICATIONS.closer.href} variant="secondary" withArrow>
+                    {APPLICATIONS.closer.cta}
+                  </Button>
+                </div>
               </div>
-            </div>
+            </BandCard>
           </Reveal>
         </Container>
       </section>

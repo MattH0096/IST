@@ -1,7 +1,11 @@
 import { PageCta } from "@/components/ui/PageCta";
-import { HOME_CTA } from "@/lib/cta";
+import type { PageCtaCopy } from "@/lib/cta";
+
+type Props = {
+  copy: PageCtaCopy;
+};
 
 /** Homepage closing CTA — shared plate; homepage vision copy. */
-export function Vision() {
-  return <PageCta copy={HOME_CTA} />;
+export function Vision({ copy }: Props) {
+  return <PageCta copy={copy} />;
 }

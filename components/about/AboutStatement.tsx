@@ -1,13 +1,17 @@
 import { BandCard } from "@/components/ui/BandBackdrop";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { ABOUT } from "@/lib/about";
-import { img } from "@/lib/images";
+import type { SiteContent } from "@/lib/cms/content";
+import { img } from "@/lib/images.server";
+
+type Props = {
+  content: SiteContent["about"];
+};
 
 /**
  * Locked about statement — left copy on Behind IST plate.
  */
-export function AboutStatement() {
+export function AboutStatement({ content }: Props) {
   const asset = img("about-statement");
 
   return (
@@ -30,10 +34,10 @@ export function AboutStatement() {
 
             <div className="relative z-10 w-full max-w-xl text-left lg:max-w-2xl">
               <p className="font-mono text-[0.72rem] font-medium uppercase tracking-[0.16em] text-ist-accent-bright">
-                {ABOUT.statementEyebrow}
+                {content.statementEyebrow}
               </p>
               <div className="mt-8 flex flex-col gap-5 sm:mt-10 sm:gap-6">
-                {ABOUT.statement.map((paragraph) => (
+                {content.statement.map((paragraph) => (
                   <p
                     key={paragraph}
                     className="text-[0.95rem] leading-relaxed text-ist-text/90 sm:text-[1.05rem] sm:leading-[1.65]"

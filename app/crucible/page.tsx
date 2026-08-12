@@ -5,40 +5,47 @@ import { CrucibleFuture } from "@/components/crucible/CrucibleFuture";
 import { CrucibleQuestions } from "@/components/crucible/CrucibleQuestions";
 import { PageHero } from "@/components/layout/PageHero";
 import { ClosingCta } from "@/components/sections/ClosingCta";
-import { CRUCIBLE_CTA } from "@/lib/cta";
-import { CRUCIBLE } from "@/lib/products";
+import { getSiteContent } from "@/lib/cms/content";
 
-export const metadata: Metadata = {
-  title: "Crucible — Simulate. Validate. Deploy with Confidence.",
-  description: CRUCIBLE.lead,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+  return {
+    title: "Crucible — Simulate. Validate. Deploy with Confidence.",
+    description: content.crucible.lead,
+  };
+}
 
-export default function CruciblePage() {
+export default async function CruciblePage() {
+  const content = await getSiteContent();
+  const c = content.crucible;
+
   return (
     <>
       <PageHero
-        eyebrow="Crucible — Current, shipping"
-        title={
-          <>
-            <span className="block">
-              <span className="text-ist-accent-bright">Crucible</span>
-              {": Simulate. Validate."}
-            </span>
-            <span className="block">{CRUCIBLE.titleLines[1]}</span>
-          </>
-        }
-        leadIntro={CRUCIBLE.leadIntro}
-        lead={CRUCIBLE.lead}
+        eyebrow={c.eyebrow}
+        title={[c.titleLine1, c.titleLine2]}
+        leadIntro={c.leadIntro}
+        lead={c.lead}
         video="/video/Crucible_Simulate_Validate.mp4"
       />
 
-      <CrucibleFlow />
+      <CrucibleFlow content={c} />
 
-      <CrucibleQuestions />
+      <CrucibleQuestions content={c} />
 
-      <CrucibleFuture />
+      <CrucibleFuture content={c} />
 
-      <ClosingCta copy={CRUCIBLE_CTA} />
+      <ClosingCta
+        copy={{
+          lines: [c.visionLine1, c.visionLine2],
+          accentLine: c.visionAccent,
+          afterLines: [c.visionAfter1, c.visionAfter2],
+          primaryCta: c.visionPrimaryCta,
+          primaryHref: c.visionPrimaryHref,
+          secondaryCta: c.visionSecondaryCta,
+          secondaryHref: c.visionSecondaryHref,
+        }}
+      />
     </>
   );
 }

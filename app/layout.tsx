@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { AerospaceField } from "@/components/ui/AerospaceField";
-import { SectionScrollLag } from "@/components/ui/SectionScrollLag";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { fontVariables } from "@/lib/fonts";
 import { COMPANY_NAME } from "@/lib/site";
 
@@ -26,17 +26,12 @@ export const viewport: Viewport = {
 };
 
 /**
- * `data-scroll-behavior="smooth"` keeps route changes instant while in-page
- * anchors stay smooth — Next 16 stopped overriding `scroll-behavior` itself.
+ * Lenis owns smooth scrolling (see SmoothScroll). Keep scroll-padding for
+ * sticky nav; native CSS smooth scroll is disabled while Lenis is active.
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={fontVariables}
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
-    >
+    <html lang="en" className={fontVariables} suppressHydrationWarning>
       <body>
         <script
           dangerouslySetInnerHTML={{
@@ -50,16 +45,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
 
-        {/* Site-wide aerospace body background */}
-        <AerospaceField className="aerospace-field--site" />
+        <SmoothScroll>
+          {/* Site-wide aerospace body background */}
+          <AerospaceField className="aerospace-field--site" />
 
-        <div className="relative z-10 bg-transparent">
-          <Nav />
-          <main id="main" className="bg-transparent">
-            <SectionScrollLag>{children}</SectionScrollLag>
-          </main>
-          <Footer />
-        </div>
+          <div className="relative z-10 bg-transparent">
+            <Nav />
+            <main id="main" className="bg-transparent">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </SmoothScroll>
       </body>
     </html>
   );

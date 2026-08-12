@@ -94,11 +94,14 @@ export const OPEN_ROLES = {
   emptyBody:
     "Check back soon, or reach out if you want to be considered as the team grows.",
   viewAll: "View All Open Roles",
-  learnMore: "Learn More",
+  apply: "Apply",
+  applyHeading: "Apply",
+  applyLead: "Tell us about yourself. Attach a resume if you have one.",
+  learnMore: "Apply",
 } as const;
 
-/** Blank card count when `ROLES` is empty — layout review only. */
-export const OPEN_ROLE_PLACEHOLDERS = 3;
+/** @deprecated Blank cards removed — public page shows empty state instead. */
+export const OPEN_ROLE_PLACEHOLDERS = 0;
 
 export const HOW_WE_WORK = {
   title: "How We Work",

@@ -7,39 +7,71 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ClosingCta } from "@/components/sections/ClosingCta";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { INSIGHTS_CTA } from "@/lib/cta";
-import { INSIGHTS_INTRO, PAPERS } from "@/lib/insights";
+import { getSiteContent } from "@/lib/cms/content";
 
-export const metadata: Metadata = {
-  title: "Insights",
-  description: INSIGHTS_INTRO,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+  return {
+    title: "Insights",
+    description: content.insights.intro,
+  };
+}
 
-export default function InsightsPage() {
+export default async function InsightsPage() {
+  const content = await getSiteContent();
+  const c = content.insights;
+
   return (
     <>
       <PageHero
-        eyebrow="Insights"
-        title="Insights"
-        lead={INSIGHTS_INTRO}
+        eyebrow={c.eyebrow}
+        title={c.title}
+        lead={c.intro}
         image="insights-hero"
-        alt="Abstract networked research field — IST Insights"
+        alt={c.heroAlt}
         mobileFocus="right"
       />
 
-      <section className="section-y bg-ist-bg">
-        <Container>
-          {PAPERS.map((paper, i) => (
-            <Reveal key={paper.slug} index={i} variant="expand">
-              <FeaturedResearch paper={paper} />
-            </Reveal>
-          ))}
-        </Container>
-      </section>
+      {c.papers.length > 0 ? (
+        <section className="section-y bg-ist-bg">
+          <Container>
+            <div className="flex flex-col gap-10">
+              {c.papers.map((paper, i) => (
+                <Reveal key={paper.id || paper.slug} index={i} variant="expand">
+                  <FeaturedResearch
+                    paper={paper}
+                    featuredLabel={i === 0 ? c.featuredLabel : "Research"}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+      ) : null}
 
-      <FuturePublications />
-      <InsightsSubscribe />
-      <ClosingCta copy={INSIGHTS_CTA} />
+      {c.upcoming.length > 0 ? (
+        <FuturePublications heading={c.upcomingHeading} items={c.upcoming} />
+      ) : null}
+
+      <InsightsSubscribe
+        heading={c.subscribeHeading}
+        lead={c.subscribeLead}
+        cta={c.subscribeCta}
+        note={c.subscribeNote}
+        successTitle={c.subscribeSuccessTitle}
+        successBody={c.subscribeSuccessBody}
+      />
+      <ClosingCta
+        copy={{
+          lines: [c.visionLine1, c.visionLine2],
+          accentLine: c.visionAccent,
+          afterLines: [c.visionAfter1, c.visionAfter2],
+          primaryCta: c.visionPrimaryCta,
+          primaryHref: c.visionPrimaryHref,
+          secondaryCta: c.visionSecondaryCta,
+          secondaryHref: c.visionSecondaryHref,
+        }}
+      />
     </>
   );
 }

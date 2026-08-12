@@ -4,8 +4,12 @@ import { Container } from "@/components/ui/Container";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { PullQuote } from "@/components/ui/PullQuote";
 import { Reveal } from "@/components/ui/Reveal";
+import type { SiteContent } from "@/lib/cms/content";
 import { cn } from "@/lib/cn";
-import { LOCUS } from "@/lib/products";
+
+type Props = {
+  content: SiteContent["locus"];
+};
 
 function FlowChevron({ direction }: { direction: "right" | "down" }) {
   return (
@@ -36,13 +40,13 @@ function FlowChevron({ direction }: { direction: "right" | "down" }) {
 /**
  * How Locus Works — numbered FeatureCard steps.
  */
-export function LocusFlow() {
+export function LocusFlow({ content }: Props) {
   return (
     <section className="section-y bg-ist-bg">
       <Container>
         <Reveal variant="expand">
           <header className="text-center">
-            <h2 className="t-h2 text-balance text-ist-text">How Locus Works</h2>
+            <h2 className="t-h2 text-balance text-ist-text">{content.flowHeading}</h2>
           </header>
         </Reveal>
 
@@ -53,9 +57,9 @@ export function LocusFlow() {
             "xl:flex xl:items-stretch xl:gap-2",
           )}
         >
-          {LOCUS.flow.map((step, i) => {
+          {content.flow.map((step, i) => {
             const n = i + 1;
-            const isLast = i === LOCUS.flow.length - 1;
+            const isLast = i === content.flow.length - 1;
 
             return (
               <Fragment key={step.key}>
@@ -90,7 +94,7 @@ export function LocusFlow() {
         </ol>
 
         <Reveal className="mt-10 lg:mt-12" variant="expand">
-          <PullQuote lead={LOCUS.pull.lead} line={LOCUS.pull.line} />
+          <PullQuote lead={content.pullLead} line={content.pullLine} />
         </Reveal>
       </Container>
     </section>

@@ -1,9 +1,7 @@
 /**
- * Typed access to the processed image set.
+ * Shared image types + manifest lookup (safe for client and server).
  *
- * The manifest is written by `npm run assets` and carries real dimensions, so
- * every `next/image` gets explicit width and height and nothing shifts on load.
- * Referring to images by key means a mistyped filename is a build error.
+ * CMS upload overrides are applied in `lib/images.server.ts` (Node `fs` only).
  */
 
 import manifest from "@/lib/generated/image-manifest.json";
@@ -16,6 +14,30 @@ export type ImageAsset = {
   height: number;
 };
 
-export function img(key: ImageKey): ImageAsset {
-  return manifest[key];
+const MANIFEST = manifest as Record<string, ImageAsset>;
+
+/** Resolve from the built manifest only (no CMS overrides). */
+export function imgManifest(key: ImageKey | string): ImageAsset {
+  return MANIFEST[key] ?? { src: "", width: 0, height: 0 };
+}
+
+/**
+ * Merge optional override map over the manifest.
+ * Prefer `img` from `@/lib/images.server` in Server Components.
+ */
+export function resolveImg(
+  key: ImageKey | string,
+  overrides?: Partial<Record<string, ImageAsset>> | null,
+): ImageAsset {
+  if (overrides?.[key]) return overrides[key]!;
+  return imgManifest(key);
+}
+
+export function tryResolveImg(
+  key: string | undefined | null,
+  overrides?: Partial<Record<string, ImageAsset>> | null,
+): ImageAsset | null {
+  if (!key) return null;
+  const asset = resolveImg(key, overrides);
+  return asset.src ? asset : null;
 }

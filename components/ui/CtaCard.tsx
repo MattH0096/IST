@@ -2,11 +2,11 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { glassPanel } from "@/components/ui/GlassSupportPanel";
-import { BandBackdrop } from "@/components/ui/BandBackdrop";
+import { BandCard } from "@/components/ui/BandBackdrop";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { img } from "@/lib/images";
+import { img } from "@/lib/images.server";
 
 type Props = {
   children: ReactNode;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 /**
- * Closing CTA — full-bleed image background, center-aligned copy + dual buttons.
+ * Closing CTA — inset chassis plate (same card treatment as other bands).
  */
 export function CtaCard({
   children,
@@ -29,43 +29,47 @@ export function CtaCard({
   const asset = img("band-vision");
 
   return (
-    <section className="group relative isolate overflow-hidden bg-ist-bg">
-      <BandBackdrop
-        src={asset.src}
-        width={asset.width}
-        height={asset.height}
-        mode="bleed"
-        pinLeft
-        greyscale
-      />
+    <section className="section-y bg-ist-bg">
+      <Container>
+        <Reveal variant="expand">
+          <BandCard
+            src={asset.src}
+            width={asset.width}
+            height={asset.height}
+            pinLeft
+            viewportClassName="min-h-[min(44svh,26rem)]"
+            contentClassName="justify-center py-10 sm:py-12 lg:py-14"
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"
+            />
+            <div className="relative z-10 mx-auto w-full max-w-3xl text-center sm:max-w-4xl">
+              {children}
 
-      <Container className="relative z-10 flex min-h-[min(52svh,28rem)] items-center justify-center py-16 sm:min-h-[min(56svh,32rem)] sm:py-20 lg:py-24">
-        <Reveal variant="expand" className="w-full">
-          <div className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl">
-            {children}
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4">
-              <Link
-                href={primaryHref}
-                className="btn btn--primary btn--lg inline-flex items-center gap-2.5"
-              >
-                {primaryCta}
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href={secondaryHref}
-                className={cn(
-                  glassPanel,
-                  "inline-flex min-h-11 items-center gap-2.5 border-white/25 px-6 py-3 text-[0.95rem] font-medium text-ist-text transition-[border-color,background-color] duration-[180ms] ease-ist hover:border-ist-accent hover:bg-black/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ist-focus sm:px-8 sm:text-base",
-                )}
-              >
-                {secondaryCta}
-                <span aria-hidden="true" className="text-ist-accent-bright">
-                  →
-                </span>
-              </Link>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4">
+                <Link
+                  href={primaryHref}
+                  className="btn btn--primary btn--lg inline-flex items-center gap-2.5"
+                >
+                  {primaryCta}
+                  <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href={secondaryHref}
+                  className={cn(
+                    glassPanel,
+                    "inline-flex min-h-11 items-center gap-2.5 border-white/25 px-6 py-3 text-[0.95rem] font-medium text-ist-text transition-[border-color,background-color] duration-[180ms] ease-ist hover:border-ist-accent hover:bg-black/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ist-focus sm:px-8 sm:text-base",
+                  )}
+                >
+                  {secondaryCta}
+                  <span aria-hidden="true" className="text-ist-accent-bright">
+                    →
+                  </span>
+                </Link>
+              </div>
             </div>
-          </div>
+          </BandCard>
         </Reveal>
       </Container>
     </section>

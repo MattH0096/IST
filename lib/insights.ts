@@ -51,43 +51,6 @@ export const PAPERS: Paper[] = [
 
 /**
  * Future publications overview — blank cards for review only.
- * Identical Coming Soon plates; no invented paper titles beyond the placeholder frame.
+ * @deprecated Placeholders are no longer shown. Upcoming items are CMS-managed.
  */
-export const FUTURE_PUBLICATIONS = [
-  {
-    id: "future-1",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-  {
-    id: "future-2",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-  {
-    id: "future-3",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-  {
-    id: "future-4",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-  {
-    id: "future-5",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-  {
-    id: "future-6",
-    title: "Future publication placeholder",
-    body: "Research on critical challenges in networked systems and autonomous communications.",
-    status: "Coming Soon",
-  },
-] as const;
+export const FUTURE_PUBLICATIONS = [] as const;

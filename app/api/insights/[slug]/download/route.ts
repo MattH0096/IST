@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { PAPERS } from "@/lib/insights";
+import { getSiteContent } from "@/lib/cms/content";
 import { DeliveryNotConfiguredError, deliverLead } from "@/lib/server/deliver";
 import { loadPaper, paperExists } from "@/lib/server/papers";
 import { clientKey, rateLimit } from "@/lib/server/rate-limit";
@@ -20,8 +20,10 @@ type Errors = { name?: string; email?: string; consent?: string; company?: strin
  */
 export async function POST(request: Request, context: { params: Promise<{ slug: string }> }) {
   const { slug } = await context.params;
+  const content = await getSiteContent();
+  const listed = content.insights.papers.some((paper) => paper.slug === slug && paper.gated);
 
-  if (!PAPERS.some((paper) => paper.slug === slug) || !paperExists(slug)) {
+  if (!listed || !paperExists(slug)) {
     return NextResponse.json({ error: "Unknown paper." }, { status: 404 });
   }
 

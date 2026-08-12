@@ -1,10 +1,18 @@
 import { CareersRoleMark } from "@/components/careers/CareersIcons";
 import { Button } from "@/components/ui/Button";
-import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { Reveal } from "@/components/ui/Reveal";
-import { OPEN_ROLES, OPEN_ROLE_PLACEHOLDERS, ROLES, type Role } from "@/lib/careers";
+import { OPEN_ROLES } from "@/lib/careers";
+
+export type CareersRoleCard = {
+  slug: string;
+  title: string;
+  team: string;
+  location: string;
+  type: string;
+  summary: string;
+};
 
 function RuleTitle({ title }: { title: string }) {
   return (
@@ -18,57 +26,37 @@ function RuleTitle({ title }: { title: string }) {
   );
 }
 
-function RoleCard({ role }: { role: Role }) {
+function RoleCard({ role }: { role: CareersRoleCard }) {
+  const meta = [role.team, role.location, role.type].filter(Boolean).join(" · ");
+
   return (
     <FeatureCard
       title={role.title}
-      meta={role.team}
+      meta={meta}
       body={role.summary}
       icon={<CareersRoleMark size={44} />}
       footer={
         <Button
-          href={role.applyHref}
+          href={`/careers?role=${encodeURIComponent(role.slug)}#apply`}
           variant="ghost"
           withArrow
           className="!min-h-0 !px-0 text-ist-accent-bright"
         >
-          {OPEN_ROLES.learnMore}
+          {OPEN_ROLES.apply}
         </Button>
       }
     />
   );
 }
 
-/** Blank role chrome for review — no invented titles or listings. */
-function RoleCardSkeleton() {
-  return (
-    <div className="feature-card-shell group h-full">
-      <ChassisFrame as="article" inert className="h-full" viewportClassName="h-full">
-        <div
-          aria-hidden="true"
-          className="feature-card flex h-full flex-col px-5 py-7 sm:px-6 sm:py-8"
-        >
-          <span className="inline-flex h-20 w-20 shrink-0 items-center justify-center border border-ist-accent/25 bg-black/40 text-ist-accent/50">
-            <CareersRoleMark size={44} />
-          </span>
-          <span className="mt-6 h-3.5 w-[72%] rounded-sm bg-white/12" />
-          <span className="mt-2 h-2.5 w-24 rounded-sm bg-white/8" />
-          <span className="mt-4 h-2.5 w-full rounded-sm bg-white/8" />
-          <span className="mt-2 h-2.5 w-[88%] rounded-sm bg-white/8" />
-          <span className="mt-2 h-2.5 w-[64%] rounded-sm bg-white/8" />
-          <span className="mt-auto pt-5 h-3 w-28 rounded-sm bg-ist-accent/20" />
-        </div>
-      </ChassisFrame>
-    </div>
-  );
-}
+type Props = {
+  roles: CareersRoleCard[];
+};
 
 /**
- * Open roles grid. Real `ROLES` when present; otherwise blank cards for layout review.
+ * Open roles grid — only real CMS roles; empty state when none.
  */
-export function CareersOpenRoles() {
-  const hasRoles = ROLES.length > 0;
-
+export function CareersOpenRoles({ roles }: Props) {
   return (
     <section id="open-roles" className="section-y bg-ist-bg">
       <Container>
@@ -76,40 +64,19 @@ export function CareersOpenRoles() {
           <RuleTitle title={OPEN_ROLES.title} />
         </Reveal>
 
-        {hasRoles ? (
-          <>
-            <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-              {ROLES.map((role, i) => (
-                <Reveal as="li" key={role.slug} index={i % 3} className="h-full">
-                  <RoleCard role={role} />
-                </Reveal>
-              ))}
-            </ul>
-            <div className="mt-10 flex justify-center">
-              <Button href="#open-roles" variant="secondary" withArrow>
-                {OPEN_ROLES.viewAll}
-              </Button>
-            </div>
-          </>
+        {roles.length > 0 ? (
+          <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            {roles.map((role, i) => (
+              <Reveal as="li" key={role.slug} index={i % 3} className="h-full">
+                <RoleCard role={role} />
+              </Reveal>
+            ))}
+          </ul>
         ) : (
-          <>
-            <p className="sr-only">{OPEN_ROLES.emptyBody}</p>
-            <ul
-              aria-label="Open roles — layout preview"
-              className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
-            >
-              {Array.from({ length: OPEN_ROLE_PLACEHOLDERS }, (_, i) => (
-                <Reveal as="li" key={`role-skeleton-${i}`} index={i} className="h-full">
-                  <RoleCardSkeleton />
-                </Reveal>
-              ))}
-            </ul>
-            <div className="mt-10 flex justify-center">
-              <Button href="#open-roles" variant="secondary" withArrow>
-                {OPEN_ROLES.viewAll}
-              </Button>
-            </div>
-          </>
+          <div className="mt-10 max-w-xl">
+            <p className="text-[1.15rem] font-semibold text-ist-text">{OPEN_ROLES.emptyTitle}</p>
+            <p className="mt-3 text-[0.95rem] text-ist-muted">{OPEN_ROLES.emptyBody}</p>
+          </div>
         )}
       </Container>
     </section>

@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
 import { CAREERS_CTA, HIRING_BAND } from "@/lib/careers";
-import { img } from "@/lib/images";
+import { img } from "@/lib/images.server";
 import { CTA } from "@/lib/site";
 
 /**

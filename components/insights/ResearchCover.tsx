@@ -1,21 +1,23 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/cn";
-import { img } from "@/lib/images";
-import type { Paper } from "@/lib/insights";
+import { img } from "@/lib/images.server";
 
 type Props = {
-  paper: Paper;
+  paper: {
+    title: string;
+    series: string;
+    date: string;
+  };
+  coverKey?: string;
   className?: string;
 };
 
 /**
- * Research book cover — cover.png art with IST mark, title, and series overlays.
- * Keeps the source portrait ratio on small screens; stretches with the featured
- * row on large layouts.
+ * Research book cover — cover art with IST mark, title, and series overlays.
  */
-export function ResearchCover({ paper, className }: Props) {
-  const cover = img("insights-cover");
+export function ResearchCover({ paper, coverKey = "insights-cover", className }: Props) {
+  const cover = img(coverKey);
 
   return (
     <div

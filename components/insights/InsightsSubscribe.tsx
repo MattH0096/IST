@@ -34,7 +34,23 @@ function BookMarkIcon() {
  * Insights subscribe strip — sits above the page CTA.
  * Email-only capture; no public inbox address in markup.
  */
-export function InsightsSubscribe({ className }: { className?: string }) {
+export function InsightsSubscribe({
+  className,
+  heading = "Advance the future of networked intelligence.",
+  lead = "Stay informed with the latest research, technical papers, and perspectives from the IST team.",
+  cta = "Subscribe for Updates",
+  note = "No spam. Unsubscribe anytime.",
+  successTitle = "You're on the list.",
+  successBody = "We'll send research updates — nothing else.",
+}: {
+  className?: string;
+  heading?: string;
+  lead?: string;
+  cta?: string;
+  note?: string;
+  successTitle?: string;
+  successBody?: string;
+}) {
   const id = useId();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -115,11 +131,10 @@ export function InsightsSubscribe({ className }: { className?: string }) {
 
                 <div className="min-w-0">
                   <h2 className="text-[1.2rem] font-semibold leading-snug text-balance text-ist-text sm:text-[1.35rem] lg:text-[1.45rem]">
-                    Advance the future of networked intelligence.
+                    {heading}
                   </h2>
                   <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ist-muted sm:text-base">
-                    Stay informed with the latest research, technical papers, and perspectives from
-                    the IST team.
+                    {lead}
                   </p>
                 </div>
               </div>
@@ -127,10 +142,8 @@ export function InsightsSubscribe({ className }: { className?: string }) {
               <div className="w-full shrink-0 lg:w-[min(100%,27rem)]">
                 {status === "done" ? (
                   <div className="border border-ist-accent/40 bg-ist-accent-wash px-5 py-4">
-                    <p className="text-[0.95rem] font-medium text-ist-text">You&apos;re on the list.</p>
-                    <p className="t-small mt-1 text-ist-muted">
-                      We&apos;ll send research updates — nothing else.
-                    </p>
+                    <p className="text-[0.95rem] font-medium text-ist-text">{successTitle}</p>
+                    <p className="t-small mt-1 text-ist-muted">{successBody}</p>
                     <button
                       type="button"
                       className="t-tag mt-3 text-ist-accent-bright underline-offset-4 hover:underline"
@@ -179,7 +192,7 @@ export function InsightsSubscribe({ className }: { className?: string }) {
                         disabled={status === "sending"}
                         className="shrink-0 justify-center sm:max-w-none"
                       >
-                        {status === "sending" ? "Subscribing…" : "Subscribe for Updates"}
+                        {status === "sending" ? "Subscribing…" : cta}
                       </Button>
                     </div>
 
@@ -195,7 +208,7 @@ export function InsightsSubscribe({ className }: { className?: string }) {
                     ) : null}
 
                     <p id={`${id}-note`} className="t-small text-ist-dim">
-                      No spam. Unsubscribe anytime.
+                      {note}
                     </p>
                   </form>
                 )}

@@ -1,11 +1,8 @@
 /**
  * §9.7 News.
  *
- * Design and filter system only. `POSTS` ships empty by design — the spec
- * forbids placeholder headlines, so the page proves its empty state with blank
- * skeleton cards (overview layout) instead of inventing copy. Add real entries
- * here and the featured plate, filters, grid, and counts all work with no
- * further changes.
+ * Categories and labels stay here. Posts are managed in the CMS
+ * (`content/overrides.json` → news.posts) via `/admin/news`.
  */
 
 export const NEWS_CATEGORIES = ["company", "partnerships", "product", "media"] as const;
@@ -13,18 +10,20 @@ export const NEWS_CATEGORIES = ["company", "partnerships", "product", "media"] a
 export type NewsCategory = (typeof NEWS_CATEGORIES)[number];
 
 export type NewsPost = {
+  id?: string;
   slug: string;
   title: string;
   category: NewsCategory;
   /** ISO 8601 date, e.g. "2026-07-14". */
   date: string;
   excerpt: string;
-  /** Key into the image manifest. Omit for a text-only post. */
+  /** Image key (manifest or upload override). */
   image?: string;
-  /** MDX source. */
+  /** Plain text body; paragraphs separated by blank lines. */
   body: string;
 };
 
+/** @deprecated Posts live in CMS — kept empty for type imports only. */
 export const POSTS: NewsPost[] = [];
 
 export const CATEGORY_LABELS: Record<NewsCategory, string> = {

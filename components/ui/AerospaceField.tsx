@@ -70,17 +70,19 @@ const STREAKS: Streak[] = [
   { id: 2, left: "68%", top: "-8%", delay: "18s", duration: "32s", length: 150 },
 ];
 
-/** Parallax depth (half prior strength). Snappy ease — no long settle after scroll. */
+/**
+ * Depth parallax against Lenis-smoothed scroll.
+ * Ease is soft so layers glide with the page rather than snap or overshoot.
+ */
 const LAYER = {
-  far: { factor: -0.022, ease: 0.22 },
-  mid: { factor: -0.05, ease: 0.26 },
-  near: { factor: -0.09, ease: 0.3 },
-  nebula: { factor: -0.015, ease: 0.2 },
+  far: { factor: -0.03, ease: 0.08 },
+  mid: { factor: -0.06, ease: 0.1 },
+  near: { factor: -0.1, ease: 0.12 },
+  nebula: { factor: -0.02, ease: 0.07 },
 } as const;
 
 /**
  * Deep-space body field — nebula volume, star layers, rare streams.
- * Layers track scroll with light depth parallax (no stop-then-slide lag).
  */
 export function AerospaceField({ className, overMedia = false }: Props) {
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -105,9 +107,6 @@ export function AerospaceField({ className, overMedia = false }: Props) {
   useEffect(() => {
     if (reduceMotion) return;
 
-    let scrollY = window.scrollY;
-    let lastScrollY = scrollY;
-    let vel = 0;
     let yFar = 0;
     let yMid = 0;
     let yNear = 0;
@@ -115,22 +114,14 @@ export function AerospaceField({ className, overMedia = false }: Props) {
     let frame = 0;
     let running = true;
 
-    const onScroll = () => {
-      scrollY = window.scrollY;
-    };
-
     const tick = () => {
       if (!running) return;
 
-      const instant = scrollY - lastScrollY;
-      lastScrollY = scrollY;
-      // Velocity smear — trails while scrolling, dies quickly when scroll stops
-      vel += (instant - vel) * 0.28;
-
-      const tFar = scrollY * LAYER.far.factor + vel * 0.55;
-      const tMid = scrollY * LAYER.mid.factor + vel * 0.9;
-      const tNear = scrollY * LAYER.near.factor + vel * 1.2;
-      const tNebula = scrollY * LAYER.nebula.factor + vel * 0.4;
+      const scrollY = window.scrollY;
+      const tFar = scrollY * LAYER.far.factor;
+      const tMid = scrollY * LAYER.mid.factor;
+      const tNear = scrollY * LAYER.near.factor;
+      const tNebula = scrollY * LAYER.nebula.factor;
 
       yFar += (tFar - yFar) * LAYER.far.ease;
       yMid += (tMid - yMid) * LAYER.mid.ease;
@@ -153,13 +144,11 @@ export function AerospaceField({ className, overMedia = false }: Props) {
       frame = requestAnimationFrame(tick);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
     frame = requestAnimationFrame(tick);
 
     return () => {
       running = false;
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
     };
   }, [reduceMotion]);
 

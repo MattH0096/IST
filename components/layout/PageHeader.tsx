@@ -1,4 +1,4 @@
-import { GlassSupportPanel } from "@/components/ui/GlassSupportPanel";
+import { CmsSupportPanel } from "@/components/ui/CmsSupportPanel";
 import { Container } from "@/components/ui/Container";
 
 type Props = {
@@ -37,7 +37,7 @@ export function PageHeader({ eyebrow, title, lead }: Props) {
         </div>
       </Container>
 
-      <GlassSupportPanel />
+      <CmsSupportPanel />
     </header>
   );
 }

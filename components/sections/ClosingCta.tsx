@@ -8,7 +8,7 @@ type Props = {
 };
 
 /**
- * Closing CTA for interior pages — same band-vision background as homepage;
+ * Closing CTA for interior pages — same inset band-vision plate as homepage;
  * copy is page-specific.
  */
 export function ClosingCta({ copy = ABOUT_CTA }: Props) {

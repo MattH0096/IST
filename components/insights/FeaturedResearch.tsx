@@ -1,14 +1,20 @@
 import { PaperGate } from "@/components/forms/PaperGate";
 import { InsightIcon } from "@/components/insights/InsightIcon";
 import { ResearchCover } from "@/components/insights/ResearchCover";
-import type { Paper } from "@/lib/insights";
+import type { SiteContent } from "@/lib/cms/content";
+
+type Paper = SiteContent["insights"]["papers"][number];
 
 /**
  * Featured research — 30 | 40 | 30.
- * Book and form stretch to the shared baseline under the info / signals column.
- * Form keeps trailing blank space above the security note.
  */
-export function FeaturedResearch({ paper }: { paper: Paper }) {
+export function FeaturedResearch({
+  paper,
+  featuredLabel = "Featured Research",
+}: {
+  paper: Paper;
+  featuredLabel?: string;
+}) {
   return (
     <article className="chassis chassis--inert">
       <div className="chassis__viewport p-5 sm:p-6 lg:p-7">
@@ -16,11 +22,11 @@ export function FeaturedResearch({ paper }: { paper: Paper }) {
           <span aria-hidden="true" className="text-[0.55rem]">
             ◆
           </span>
-          Featured Research
+          {featuredLabel}
         </p>
 
         <div className="mt-5 grid items-stretch gap-5 sm:mt-6 sm:gap-6 lg:grid-cols-[3fr_4fr_3fr] lg:gap-x-6 xl:gap-x-8">
-          <ResearchCover paper={paper} />
+          <ResearchCover paper={paper} coverKey={paper.coverKey} />
 
           <div className="flex min-w-0 flex-col">
             <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-ist-accent-bright">
@@ -46,7 +52,6 @@ export function FeaturedResearch({ paper }: { paper: Paper }) {
               ))}
             </ul>
 
-            {/* Grows when the row is taller than the copy so signals sit on the shared baseline */}
             <div className="min-h-4 flex-1" aria-hidden="true" />
 
             <ul className="flex flex-wrap gap-x-4 gap-y-2 border-t border-ist-line pt-3.5">
@@ -64,7 +69,13 @@ export function FeaturedResearch({ paper }: { paper: Paper }) {
             </ul>
           </div>
 
-          <PaperGate slug={paper.slug} title={paper.title} compact fillHeight />
+          {paper.gated ? (
+            <PaperGate slug={paper.slug} title={paper.title} compact fillHeight />
+          ) : (
+            <div className="flex items-end text-[0.85rem] text-ist-muted">
+              Available without gate.
+            </div>
+          )}
         </div>
       </div>
     </article>

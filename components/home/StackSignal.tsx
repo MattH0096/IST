@@ -2,7 +2,8 @@ import { Container } from "@/components/ui/Container";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { STACK, type LayerStatus } from "@/lib/home";
+import type { SiteContent } from "@/lib/cms/content";
+import type { LayerStatus } from "@/lib/home";
 
 type StackIcon = "distribution" | "simulation" | "hardware" | "interop" | "ecosystem";
 
@@ -122,24 +123,29 @@ function DiamondTile({
   );
 }
 
+type Props = {
+  title: string;
+  layers: SiteContent["home"]["stackLayers"];
+};
+
 /**
  * §9.1.9 — five-layer platform signal as a 2+3 diamond mesh.
  */
-export function StackSignal() {
+export function StackSignal({ title, layers }: Props) {
   return (
     <section id="stack" className="section-y bg-ist-bg">
       <Container>
         <Reveal variant="expand">
           <header className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <h2 className="t-h2 text-ist-text">Platform Stack</h2>
+            <h2 className="t-h2 text-ist-text">{title}</h2>
           </header>
         </Reveal>
 
         <div className="stack-diamond-board mt-10 lg:mt-12">
           <ul className="stack-diamond-board__grid">
-            {STACK.map((layer, i) => (
+            {layers.map((layer, i) => (
               <DiamondTile
-                key={layer.layer}
+                key={`${layer.layer}-${i}`}
                 layer={layer.layer}
                 product={layer.product}
                 status={layer.status}

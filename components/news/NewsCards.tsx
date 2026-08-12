@@ -5,9 +5,13 @@ import {
   NewsCalendarIcon,
   NewsFilterIcon,
 } from "@/components/news/NewsIcons";
-import { cn } from "@/lib/cn";
-import { img, type ImageKey } from "@/lib/images";
+import type { ImageAsset } from "@/lib/images";
 import { CATEGORY_LABELS, type NewsPost } from "@/lib/news";
+
+export type NewsPostView = NewsPost & {
+  /** Resolved on the server (CMS overrides + manifest). */
+  imageAsset?: ImageAsset | null;
+};
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -18,8 +22,8 @@ function formatDate(iso: string) {
 }
 
 /** Horizontal news card — image left, copy right. */
-export function NewsCard({ post }: { post: NewsPost }) {
-  const asset = post.image ? img(post.image as ImageKey) : null;
+export function NewsCard({ post }: { post: NewsPostView }) {
+  const asset = post.imageAsset;
 
   return (
     <article className="group overflow-hidden rounded-md border border-ist-line bg-[#0a0a0a] transition-[border-color] duration-[180ms] ease-ist hover:border-ist-line-strong">
@@ -66,40 +70,12 @@ export function NewsCard({ post }: { post: NewsPost }) {
   );
 }
 
-/** Blank overview card — layout chrome only, no fabricated headlines. */
-export function NewsCardSkeleton() {
-  return (
-    <article
-      aria-hidden="true"
-      className="overflow-hidden rounded-md border border-ist-line bg-[#0a0a0a]"
-    >
-      <div className="grid min-h-[9.5rem] grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] sm:min-h-[10.5rem]">
-        <div className="min-h-[9.5rem] bg-[#141414] sm:min-h-[10.5rem]" />
-        <div className="flex flex-col px-4 py-3.5 sm:px-5 sm:py-4">
-          <span className="h-2.5 w-16 rounded-sm bg-ist-accent/25" />
-          <span className="mt-3 h-3.5 w-[88%] rounded-sm bg-white/12" />
-          <span className="mt-2 h-3.5 w-[70%] rounded-sm bg-white/10" />
-          <span className="mt-3 h-2.5 w-full rounded-sm bg-white/8" />
-          <span className="mt-1.5 h-2.5 w-[82%] rounded-sm bg-white/8" />
-          <div className="mt-auto flex items-center justify-between pt-4">
-            <span className="h-2.5 w-24 rounded-sm bg-white/8" />
-            <span className="h-2.5 w-16 rounded-sm bg-ist-accent/20" />
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-export function NewsFeatured({ post }: { post: NewsPost }) {
-  const asset = post.image ? img(post.image as ImageKey) : null;
+export function NewsFeatured({ post }: { post: NewsPostView }) {
+  const asset = post.imageAsset;
 
   return (
     <article className="overflow-hidden rounded-md border border-ist-line bg-[#0a0a0a]">
-      <Link
-        href={`/news/${post.slug}`}
-        className="group grid lg:grid-cols-2"
-      >
+      <Link href={`/news/${post.slug}`} className="group grid lg:grid-cols-2">
         <div className="relative min-h-[14rem] bg-ist-raised sm:min-h-[16rem] lg:min-h-[18rem]">
           {asset ? (
             <Image
@@ -143,36 +119,6 @@ export function NewsFeatured({ post }: { post: NewsPost }) {
           </div>
         </div>
       </Link>
-    </article>
-  );
-}
-
-/** Blank featured plate for the empty overview. */
-export function NewsFeaturedSkeleton() {
-  return (
-    <article
-      aria-hidden="true"
-      className="overflow-hidden rounded-md border border-ist-line bg-[#0a0a0a]"
-    >
-      <div className="grid lg:grid-cols-2">
-        <div className="relative min-h-[14rem] bg-[#141414] sm:min-h-[16rem] lg:min-h-[18rem]">
-          <span className="absolute left-3 top-3 rounded-sm bg-black/55 px-2.5 py-1 text-[0.68rem] text-ist-text/70">
-            Featured
-          </span>
-        </div>
-        <div className="flex flex-col px-5 py-6 sm:px-7 sm:py-8 lg:px-8">
-          <span className="h-2.5 w-28 rounded-sm bg-ist-accent/25" />
-          <span className="mt-4 h-5 w-[92%] rounded-sm bg-white/12" />
-          <span className="mt-2.5 h-5 w-[70%] rounded-sm bg-white/10" />
-          <span className="mt-5 h-2.5 w-full rounded-sm bg-white/8" />
-          <span className="mt-2 h-2.5 w-[95%] rounded-sm bg-white/8" />
-          <span className="mt-2 h-2.5 w-[78%] rounded-sm bg-white/8" />
-          <div className="mt-auto flex items-center justify-between pt-10">
-            <span className="h-2.5 w-36 rounded-sm bg-white/8" />
-            <span className="h-2.5 w-20 rounded-sm bg-ist-accent/20" />
-          </div>
-        </div>
-      </div>
     </article>
   );
 }

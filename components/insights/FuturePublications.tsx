@@ -1,7 +1,9 @@
 import { InsightIcon } from "@/components/insights/InsightIcon";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { FUTURE_PUBLICATIONS } from "@/lib/insights";
+import type { SiteContent } from "@/lib/cms/content";
+
+type FutureItem = SiteContent["insights"]["upcoming"][number];
 
 function TargetMark({ size = 16 }: { size?: number }) {
   return (
@@ -54,11 +56,16 @@ function ClockMark() {
   );
 }
 
-/**
- * Future publications — blank overview cards for review (Coming Soon).
- * No fabricated paper titles beyond the approved placeholder framing.
- */
-export function FuturePublications() {
+/** Upcoming publications — only rendered when the CMS has real upcoming items. */
+export function FuturePublications({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: FutureItem[];
+}) {
+  if (items.length === 0) return null;
+
   return (
     <section className="section-y bg-ist-bg pt-0">
       <Container>
@@ -68,12 +75,12 @@ export function FuturePublications() {
               <TargetMark />
             </span>
             <h2 className="font-mono text-[0.72rem] font-medium uppercase tracking-[0.16em] text-ist-accent-bright">
-              Future Publications
+              {heading}
             </h2>
           </header>
 
           <ul className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-            {FUTURE_PUBLICATIONS.map((item, i) => (
+            {items.map((item, i) => (
               <Reveal key={item.id} as="li" index={i} step={80} variant="rise">
                 <article className="flex h-full flex-col items-center rounded-md border border-ist-line bg-[#0a0a0a] px-6 py-8 text-center sm:px-7 sm:py-9">
                   <DocMark />

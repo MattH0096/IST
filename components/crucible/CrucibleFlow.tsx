@@ -4,8 +4,12 @@ import { Container } from "@/components/ui/Container";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { PullQuote } from "@/components/ui/PullQuote";
 import { Reveal } from "@/components/ui/Reveal";
+import type { SiteContent } from "@/lib/cms/content";
 import { cn } from "@/lib/cn";
-import { CRUCIBLE } from "@/lib/products";
+
+type Props = {
+  content: SiteContent["crucible"];
+};
 
 function FlowChevron({ direction }: { direction: "right" | "down" }) {
   return (
@@ -36,14 +40,14 @@ function FlowChevron({ direction }: { direction: "right" | "down" }) {
 /**
  * Crucible workflow — numbered FeatureCard steps.
  */
-export function CrucibleFlow() {
+export function CrucibleFlow({ content }: Props) {
   return (
     <section className="section-y bg-ist-bg">
       <Container>
         <Reveal variant="expand">
           <header className="text-center">
-            <p className="t-tag text-ist-dim">How Crucible works</p>
-            <h2 className="t-h2 mt-4 text-balance text-ist-text">The Crucible Workflow</h2>
+            <p className="t-tag text-ist-dim">{content.flowTag}</p>
+            <h2 className="t-h2 mt-4 text-balance text-ist-text">{content.flowHeading}</h2>
           </header>
         </Reveal>
 
@@ -54,9 +58,9 @@ export function CrucibleFlow() {
             "xl:flex xl:items-stretch xl:gap-2",
           )}
         >
-          {CRUCIBLE.flow.map((step, i) => {
+          {content.flow.map((step, i) => {
             const n = i + 1;
-            const isLast = i === CRUCIBLE.flow.length - 1;
+            const isLast = i === content.flow.length - 1;
 
             return (
               <Fragment key={step.key}>
@@ -91,7 +95,7 @@ export function CrucibleFlow() {
         </ol>
 
         <Reveal className="mt-10 lg:mt-12" variant="expand">
-          <PullQuote lead={CRUCIBLE.pull.lead} line={CRUCIBLE.pull.line} />
+          <PullQuote lead={content.pullLead} line={content.pullLine} />
         </Reveal>
       </Container>
     </section>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/cn";
-import { img, type ImageKey } from "@/lib/images";
+import { img, type ImageKey } from "@/lib/images.server";
 
 type Props = {
   label: string;

@@ -4,34 +4,53 @@ import { PageHero } from "@/components/layout/PageHero";
 import { NewsIndex } from "@/components/news/NewsIndex";
 import { ClosingCta } from "@/components/sections/ClosingCta";
 import { Container } from "@/components/ui/Container";
-import { NEWS_CTA } from "@/lib/cta";
+import { getSiteContent } from "@/lib/cms/content";
+import { tryImg } from "@/lib/images.server";
 
-const LEAD = "Stay informed on partnerships, milestones, product updates, and company news.";
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+  return {
+    title: "News — Latest News & Updates",
+    description: content.news.lead,
+  };
+}
 
-export const metadata: Metadata = {
-  title: "News — Latest News & Updates",
-  description: LEAD,
-};
+export default async function NewsPage() {
+  const content = await getSiteContent();
+  const c = content.news;
+  const posts = c.posts.map((post) => ({
+    ...post,
+    imageAsset: tryImg(post.image),
+  }));
 
-export default function NewsPage() {
   return (
     <>
       <PageHero
-        eyebrow="News"
-        title="Latest News & Updates"
-        lead={LEAD}
+        eyebrow={c.eyebrow}
+        title={c.title}
+        lead={c.lead}
         image="news-hero"
-        alt="IST news — networked systems and updates"
+        alt={c.heroAlt}
         mobileFocus="right"
       />
 
       <section className="section-y bg-ist-bg">
         <Container>
-          <NewsIndex />
+          <NewsIndex posts={posts} />
         </Container>
       </section>
 
-      <ClosingCta copy={NEWS_CTA} />
+      <ClosingCta
+        copy={{
+          lines: [c.visionLine1, c.visionLine2],
+          accentLine: c.visionAccent,
+          afterLines: [c.visionAfter1, c.visionAfter2],
+          primaryCta: c.visionPrimaryCta,
+          primaryHref: c.visionPrimaryHref,
+          secondaryCta: c.visionSecondaryCta,
+          secondaryHref: c.visionSecondaryHref,
+        }}
+      />
     </>
   );
 }

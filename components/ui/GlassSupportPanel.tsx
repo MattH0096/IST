@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 
-import { SUPPORT_LINE } from "@/lib/home";
 import { cn } from "@/lib/cn";
 
 /** Match nav dropdown over hero: light glass, not solid black. */
@@ -12,13 +11,21 @@ type Props = {
   delay?: string;
   /** When true, also show on mobile (homepage). Interior heroes stay desktop-only. */
   mobile?: boolean;
+  lines: readonly string[];
+  closer: string;
 };
 
 /**
  * Support copy in a translucent bottom-right panel.
  * Desktop: all page heroes. Mobile: homepage only (`mobile`).
  */
-export function GlassSupportPanel({ className, delay = "400ms", mobile = false }: Props) {
+export function GlassSupportPanel({
+  className,
+  delay = "400ms",
+  mobile = false,
+  lines,
+  closer,
+}: Props) {
   return (
     <aside
       aria-label="Support line"
@@ -31,7 +38,7 @@ export function GlassSupportPanel({ className, delay = "400ms", mobile = false }
       )}
       style={{ "--hero-delay": delay } as CSSProperties}
     >
-      {SUPPORT_LINE.lines.map((line) => (
+      {lines.map((line) => (
         <p
           key={line}
           className="mt-1.5 text-[0.95rem] leading-snug text-ist-text first:mt-0 sm:text-[1.05rem]"
@@ -40,7 +47,7 @@ export function GlassSupportPanel({ className, delay = "400ms", mobile = false }
         </p>
       ))}
       <p className="mt-3 text-right text-[1.25rem] font-semibold tracking-tight text-ist-accent-bright sm:text-[1.4rem]">
-        {SUPPORT_LINE.closer}
+        {closer}
       </p>
     </aside>
   );

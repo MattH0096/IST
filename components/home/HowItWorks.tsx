@@ -4,25 +4,30 @@ import { PsIcon } from "@/components/icons/ProblemSolutionIcons";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { HOW_IT_WORKS } from "@/lib/home";
-import { img } from "@/lib/images";
+import type { SiteContent } from "@/lib/cms/content";
+import { img, type ImageKey } from "@/lib/images.server";
+
+type Props = {
+  title: string;
+  steps: SiteContent["home"]["howItWorksSteps"];
+};
 
 /**
  * §9.1.5 — card grid: one-by-one rise.
  */
-export function HowItWorks() {
+export function HowItWorks({ title, steps }: Props) {
   return (
     <section id="how-it-works" className="section-y bg-ist-bg">
       <Container>
         <Reveal variant="expand">
           <header className="text-center">
-            <h2 className="t-h2 text-ist-text">How It Works</h2>
+            <h2 className="t-h2 text-ist-text">{title}</h2>
           </header>
         </Reveal>
 
         <ol className="mt-10 grid grid-cols-1 gap-10 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
-          {HOW_IT_WORKS.map((step, i) => {
-            const asset = img(step.image);
+          {steps.map((step, i) => {
+            const asset = img(step.image as ImageKey);
 
             return (
               <li key={step.key} className="min-w-0">

@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { LinkRule } from "@/components/ui/LinkRule";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { img, type ImageKey } from "@/lib/images";
+import { img, type ImageKey } from "@/lib/images.server";
 
 type Props = {
   id: string;

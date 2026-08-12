@@ -2,7 +2,7 @@ import { BandCard } from "@/components/ui/BandBackdrop";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { CAREERS } from "@/lib/careers";
-import { img } from "@/lib/images";
+import { img } from "@/lib/images.server";
 
 /**
  * Locked hiring line — first band under the hero, Career.png plate.
