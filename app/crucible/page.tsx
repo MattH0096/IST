@@ -27,6 +27,7 @@ export default function CruciblePage() {
             <span className="block">{CRUCIBLE.titleLines[1]}</span>
           </>
         }
+        leadIntro={CRUCIBLE.leadIntro}
         lead={CRUCIBLE.lead}
         video="/video/Crucible_Simulate_Validate.mp4"
       />

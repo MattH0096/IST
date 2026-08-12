@@ -10,10 +10,10 @@
  */
 
 export const ABOUT = {
-  title: "The Engineers Behind IST",
+  title: "The Engineering Behind IST",
   /** Display title lines for the statement plate. */
-  titleLines: ["The Engineers", "Behind IST."] as const,
-  lead: "IST was founded by engineers with experience building the systems that power defense, space, and critical infrastructure.",
+  titleLines: ["The Engineering", "Behind IST"] as const,
+  lead: "IST was founded on deep engineering experience building the systems that power defense, space, and critical infrastructure.",
   statementEyebrow: "About IST",
   statement: [
     "Connected systems are reshaping every critical domain — defense, space, logistics, infrastructure. That transformation demands more performance from the underlying technology than it was ever designed to deliver. IST was founded to change that.",

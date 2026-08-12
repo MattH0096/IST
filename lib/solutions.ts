@@ -14,7 +14,7 @@ export const SOLUTIONS_HEADER = {
   titleLines: ["Solutions Built for Dynamic,", "Intermittent Networks"] as const,
   /** Single-line form for metadata / accessibility. */
   title: "Solutions Built for Dynamic, Intermittent Networks",
-  lead: "IST delivers the software, simulation, and hardware needed to operate with confidence in the most challenging environments.",
+  lead: "IST delivers the software and simulation tools needed to operate with confidence in the most challenging environments — with programmable hardware in development to extend that capability further.",
 } as const;
 
 export type SolutionColumn = {

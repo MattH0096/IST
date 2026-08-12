@@ -20,11 +20,11 @@ export const CONTACT_FORM = {
 
 export const CONTACT_OFFICE = {
   title: "Our Office",
-  location: "Denver, Colorado, USA",
+  location: "Colorado",
   description:
-    "IST is headquartered in Denver, a hub of innovation and expertise in aerospace, defense, and advanced communications.",
+    "IST is headquartered in Colorado, a hub of innovation and expertise in aerospace, defense, and advanced communications.",
   mapAlt:
-    "A map of the United States traced with network links converging on Denver, Colorado.",
+    "A map of the United States with IST headquartered in Colorado.",
 } as const;
 
 export const CONTACT_SOCIAL = {

@@ -178,11 +178,7 @@ export function PaperGate({
 
   return (
     <form noValidate onSubmit={onSubmit} className={shell}>
-      <p className="flex items-center gap-1.5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-ist-accent-bright">
-        <InsightIcon name="lock" size={12} />
-        Gated download
-      </p>
-      <p className="mt-1.5 text-[0.75rem] leading-snug text-ist-muted">
+      <p className="text-[0.75rem] leading-snug text-ist-muted">
         Submit your details to download the full paper.
       </p>
 

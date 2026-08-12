@@ -1,12 +1,10 @@
-import Image from "next/image";
-
 import {
   ContactNetworkIcon,
   ContactPinIcon,
 } from "@/components/contact/ContactIcons";
+import { ContactColoradoMap } from "@/components/contact/ContactColoradoMap";
 import { COMPANY_NAME, SOCIALS } from "@/lib/site";
 import { CONTACT_OFFICE, CONTACT_SOCIAL } from "@/lib/contact";
-import { img } from "@/lib/images";
 
 function SocialMark({ label }: { label: string }) {
   if (label === "LinkedIn") {
@@ -24,11 +22,9 @@ function SocialMark({ label }: { label: string }) {
 }
 
 /**
- * Right column — office location, Denver map, LinkedIn / X.
+ * Right column — office location, Colorado map, LinkedIn.
  */
 export function ContactAside() {
-  const map = img("map-denver");
-
   return (
     <aside className="flex h-full flex-col border border-ist-line bg-[#0a0a0a] p-5 sm:p-6 lg:p-7">
       <div>
@@ -48,15 +44,8 @@ export function ContactAside() {
           {CONTACT_OFFICE.description}
         </p>
 
-        <div className="relative mt-5 overflow-hidden border border-ist-line">
-          <Image
-            src={map.src}
-            width={map.width}
-            height={map.height}
-            alt={CONTACT_OFFICE.mapAlt}
-            sizes="(min-width: 1024px) 28rem, 100vw"
-            className="aspect-[5/4] w-full object-cover"
-          />
+        <div className="relative mt-5 overflow-hidden border border-ist-line bg-black">
+          <ContactColoradoMap />
         </div>
       </div>
 

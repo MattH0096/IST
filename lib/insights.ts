@@ -45,7 +45,6 @@ export const PAPERS: Paper[] = [
     signals: [
       { label: "Technical paper", icon: "doc" },
       { label: "Figures & models", icon: "chart" },
-      { label: "Peer review in progress", icon: "review" },
     ],
   },
 ];

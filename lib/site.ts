@@ -99,17 +99,16 @@ export const FOOTER_BRAND = {
 } as const;
 
 /**
- * LinkedIn and X only — no other platforms.
- *
- * `href: null` means the URL is still {{TBD}}. The footer renders those as
- * inert, so an unconfirmed profile can never ship as a link to nowhere.
+ * LinkedIn only. `href: null` would render inert; keep real URLs only.
  */
 export const SOCIALS: { label: string; href: string | null }[] = [
-  { label: "LinkedIn", href: null },
-  { label: "X", href: null },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/integrated-switching-technologies",
+  },
 ];
 
-export const OFFICE_LOCATION = "Denver, Colorado, USA";
+export const OFFICE_LOCATION = "Colorado";
 
 export const COMPANY_NAME = "Integrated Switching Technologies";
 

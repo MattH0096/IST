@@ -71,13 +71,37 @@ export const LOCUS = {
     },
     {
       title: "End-to-end data integrity",
-      body: "Protects information from source to delivery — no partial payloads.",
+      body: "Protects information from source to delivery.",
       icon: "integrity",
     },
     {
       title: "Built for mission-critical systems",
       body: "Designed for the highest standards of reliability.",
       icon: "mission",
+    },
+  ] satisfies Feature[],
+  /** Outcome-driven impact — sits between Assured Distribution and Why Choose. */
+  impactHeading: "The Impact of Assured Distribution",
+  impact: [
+    {
+      title: "Higher Mission Success Rates",
+      body: "When every destination receives its complete payload, missions don't stall on partial or missing data. Locus turns intermittent connectivity from a mission risk into a solved problem.",
+      icon: "deliver",
+    },
+    {
+      title: "Reduced Operational Downtime",
+      body: "Networks that adapt in real time mean fewer manual interventions, fewer dropped handoffs, and less time spent troubleshooting connectivity instead of executing the mission.",
+      icon: "adapt",
+    },
+    {
+      title: "A Measurable Reliability Advantage",
+      body: "In environments where competitors' networks fail silently, Locus keeps moving. That reliability becomes a differentiator you can point to — in a bid, an evaluation, or a customer conversation.",
+      icon: "integrity",
+    },
+    {
+      title: "Confidence to Operate at the Edge",
+      body: "Locus lets teams push into more contested, more remote, and more dynamic environments than conventional networks can support — without betting the mission on connectivity holding.",
+      icon: "missionFirst",
     },
   ] satisfies Feature[],
   why: [
@@ -110,6 +134,8 @@ export const CRUCIBLE = {
   title: "Crucible: Simulate. Validate. Deploy with Confidence.",
   titleLines: ["Crucible: Simulate. Validate.", "Deploy with Confidence."] as const,
   lead: "Before deployment, watch your mission come to life. Build your network. Move your assets. See how terrain, movement, and interference impact connectivity — and how IST keeps information flowing.",
+  /** Opens the hero lead, immediately under the title. */
+  leadIntro: "Crucible is IST's network digital twin.",
   flow: [
     {
       key: "Build",
@@ -140,7 +166,7 @@ export const CRUCIBLE = {
     lead: "Measure results, identify failure points, and optimize before you deploy.",
     line: "Know before you go.",
   },
-  /** Six critical questions — approved checklist strings. */
+  /** Critical questions — approved checklist strings. */
   questionsHeading: "Crucible Answers Critical Questions Before You Deploy",
   questions: [
     "Will my network reach every asset?",
@@ -149,6 +175,9 @@ export const CRUCIBLE = {
     "How do interference and jamming impact performance?",
     "How does movement affect link quality over time?",
     "How much bandwidth do I actually need?",
+    "How many optical crosslink terminals (OCTs) do you actually need?",
+    "What's the minimum link count to hit your latency target?",
+    "Where are you over-provisioning bandwidth — and where are you under-provisioning it?",
   ],
   /**
    * Approved as vision, explicitly not present capability. Set apart visually

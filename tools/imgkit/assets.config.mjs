@@ -248,8 +248,8 @@ export const ASSETS = [
   },
   {
     slug: "map-denver",
-    src: "ChatGPT Image Aug 6, 2026, 02_24_04 PM (5).png",
+    src: "map-colorado.png",
     role: "band",
-    note: "Contact page map",
+    note: "Contact page map — Colorado HQ",
   },
 ];

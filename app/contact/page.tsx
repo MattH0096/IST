@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 const TITLE = "Let's Build the Future of Resilient Communication Together.";
 const LEAD =
-  "Whether you have a mission challenge, partnership opportunity, or just want to learn more — we'd love to hear from you.";
+  "Whether you're evaluating a mission challenge, exploring an investment, or looking to partner — we'd love to hear from you.";
 
 export const metadata: Metadata = {
   title: "Contact IST",

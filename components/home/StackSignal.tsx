@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { ChassisFrame } from "@/components/ui/ChassisFrame";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { STACK, STATUS_LABELS, type LayerStatus } from "@/lib/home";
+import { STACK, type LayerStatus } from "@/lib/home";
 
 type StackIcon = "distribution" | "simulation" | "hardware" | "interop" | "ecosystem";
 
@@ -114,12 +114,6 @@ function DiamondTile({
               </span>
               <h3 className="stack-diamond__title">{layer}</h3>
               {product ? <p className="stack-diamond__product">{product}</p> : null}
-              <p
-                className={cn("tag t-tag stack-diamond__status", statusClass(status))}
-                data-status={status}
-              >
-                {STATUS_LABELS[status]}
-              </p>
             </div>
           </ChassisFrame>
         </div>
@@ -158,10 +152,4 @@ export function StackSignal() {
       </Container>
     </section>
   );
-}
-
-function statusClass(status: LayerStatus): string {
-  if (status === "current") return "text-ist-accent-bright";
-  if (status === "in-development") return "text-ist-muted";
-  return "text-ist-dim";
 }

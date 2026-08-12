@@ -15,11 +15,11 @@ export const HERO = {
   ctaHref: "/#how-it-works",
 } as const;
 
-/** §9.1.2 [LOCKED] — lives in the hero bottom-right panel. */
+/** Hero bottom-right support panel. */
 export const SUPPORT_LINE = {
   lines: [
-    "The world is becoming autonomous.",
-    "Communication was not built for that future.",
+    "The world moves.",
+    "Networks weren't built to keep up.",
   ],
   closer: "IST was.",
 } as const;
@@ -86,7 +86,7 @@ export const HOW_IT_WORKS = [
 export const PRODUCTS = [
   {
     id: "locus",
-    eyebrow: "Locus — Current, shipping",
+    eyebrow: "",
     name: "Locus",
     tagline: "Assured data distribution engine.",
     body: "Locus is IST's assured distribution engine. It ensures mission-critical information continues moving through dynamic, intermittently connected networks until delivery is complete.",
@@ -100,7 +100,7 @@ export const PRODUCTS = [
   },
   {
     id: "crucible",
-    eyebrow: "Crucible — Current, shipping",
+    eyebrow: "",
     name: "Crucible",
     tagline: "Simulation, validation, mission visualization.",
     body: "Before deployment, watch your mission come to life. Build your network. Move your assets. See how terrain, movement, and interference impact connectivity — and how IST keeps information flowing.",

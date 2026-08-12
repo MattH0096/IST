@@ -4,6 +4,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ClosingCta } from "@/components/sections/ClosingCta";
 import { LocusDistribution } from "@/components/locus/LocusDistribution";
 import { LocusFlow } from "@/components/locus/LocusFlow";
+import { LocusImpact } from "@/components/locus/LocusImpact";
 import { LocusWhyChoose } from "@/components/locus/LocusWhyChoose";
 import { LOCUS_CTA } from "@/lib/cta";
 import { LOCUS } from "@/lib/products";
@@ -34,6 +35,8 @@ export default function LocusPage() {
       <LocusFlow />
 
       <LocusDistribution />
+
+      <LocusImpact />
 
       <LocusWhyChoose />
 

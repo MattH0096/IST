@@ -9,7 +9,7 @@ import { ABOUT } from "@/lib/about";
 import { ABOUT_CTA } from "@/lib/cta";
 
 export const metadata: Metadata = {
-  title: "About — The Engineers Behind IST",
+  title: "About — The Engineering Behind IST",
   description: ABOUT.lead,
 };
 

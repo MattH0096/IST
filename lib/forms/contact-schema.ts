@@ -11,6 +11,7 @@ export const INTEREST_OPTIONS = [
   "Crucible",
   "Hardware",
   "Partnership",
+  "Invest in IST",
   "Careers",
   "Other",
 ] as const;

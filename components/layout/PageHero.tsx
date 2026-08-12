@@ -10,6 +10,8 @@ type Props = {
   eyebrow?: string;
   /** Plain string, line breaks as separate entries, or custom React nodes. */
   title: string | readonly string[] | ReactNode;
+  /** Optional line directly under the title, before `lead`. */
+  leadIntro?: string;
   lead?: string;
   image?: ImageKey;
   /** One clip, or several that cycle like the homepage hero. */
@@ -40,6 +42,7 @@ function TitleLines({ title }: { title: string | readonly string[] | ReactNode }
 export function PageHero({
   eyebrow,
   title,
+  leadIntro,
   lead,
   image,
   video,
@@ -91,9 +94,17 @@ export function PageHero({
           >
             <TitleLines title={title} />
           </h1>
+          {leadIntro ? (
+            <p
+              className="t-lead hero-in mt-8 max-w-3xl font-medium text-ist-text"
+              style={{ "--hero-delay": "200ms" } as React.CSSProperties}
+            >
+              {leadIntro}
+            </p>
+          ) : null}
           {lead ? (
             <p
-              className="t-lead hero-in mt-8 max-w-3xl"
+              className={`t-lead hero-in max-w-3xl ${leadIntro ? "mt-4" : "mt-8"}`}
               style={{ "--hero-delay": "240ms" } as React.CSSProperties}
             >
               {lead}
