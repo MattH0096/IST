@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -14,7 +15,12 @@ import { AutoTextarea } from "@/components/admin/AutoTextarea";
 import type { SiteContent } from "@/lib/cms/content";
 import { newId, slugify } from "@/lib/cms/id";
 import type { ImageAsset } from "@/lib/images";
-import { CATEGORY_LABELS, NEWS_CATEGORIES, type NewsCategory } from "@/lib/news";
+import {
+  CATEGORY_LABELS,
+  DEFAULT_NEWS_POSTS,
+  NEWS_CATEGORIES,
+  type NewsCategory,
+} from "@/lib/news";
 
 type Props = {
   content: SiteContent["news"];
@@ -39,7 +45,10 @@ function emptyPost(): Post {
 }
 
 export function AdminNewsEditor({ content, images, defaults }: Props) {
-  const [v, setV] = useState(content);
+  const [v, setV] = useState(() => ({
+    ...content,
+    posts: content.posts.length > 0 ? content.posts : DEFAULT_NEWS_POSTS.map((p) => ({ ...p })),
+  }));
   const [assets, setAssets] = useState(images);
   const [busyKey, setBusyKey] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -47,6 +56,13 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
 
   function set<K extends keyof typeof v>(key: K, value: (typeof v)[K]) {
     setV((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function updatePost(i: number, patch: Partial<Post>) {
+    set(
+      "posts",
+      v.posts.map((p, j) => (j === i ? { ...p, ...patch } : p)),
+    );
   }
 
   async function onUpload(key: string, file: File) {
@@ -125,8 +141,10 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
     <form onSubmit={onSave} className="max-w-4xl">
       <h1 className="text-[1.75rem] font-semibold tracking-tight">News</h1>
       <p className="mt-2 text-[0.95rem] text-ist-muted">
-        Add, edit, or remove real posts. The public page shows only saved posts — no blank
-        placeholder cards.
+        Add posts with date, title, short excerpt, and full body. The public list shows a basic
+        row (date / headline / excerpt / Read More). Read More opens{" "}
+        <code className="text-ist-text">/news/[slug]</code> with previous / next links between
+        posts.
       </p>
 
       <div className="mt-8 flex flex-col gap-8">
@@ -160,7 +178,10 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
           </div>
         </AdminSectionForm>
 
-        <AdminSectionForm title="Posts" hint="Newest posts appear first on the site (by date).">
+        <AdminSectionForm
+          title="Posts"
+          hint="Newest first on the site (by date). Body paragraphs: separate with a blank line."
+        >
           <div className="flex flex-col gap-6">
             {v.posts.length === 0 ? (
               <p className="text-[0.9rem] text-ist-muted">No posts yet. Add one when you have news.</p>
@@ -168,6 +189,8 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
 
             {v.posts.map((post, i) => {
               const imageKey = post.image || `news-${post.slug || post.id}`;
+              const publicHref = post.slug ? `/news/${post.slug}` : null;
+
               return (
                 <div
                   key={post.id}
@@ -178,73 +201,60 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
                       <p className="text-[0.85rem] font-medium text-ist-accent-bright">
                         Post {i + 1}
                       </p>
-                      <button
-                        type="button"
-                        className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
-                        onClick={() =>
-                          set(
-                            "posts",
-                            v.posts.filter((_, j) => j !== i),
-                          )
-                        }
-                      >
-                        Remove
-                      </button>
+                      <div className="flex flex-wrap items-center gap-3">
+                        {publicHref ? (
+                          <Link
+                            href={publicHref}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
+                          >
+                            View page
+                          </Link>
+                        ) : null}
+                        <button
+                          type="button"
+                          className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
+                          onClick={() =>
+                            set(
+                              "posts",
+                              v.posts.filter((_, j) => j !== i),
+                            )
+                          }
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                     <AdminField
                       label="Title"
                       value={post.title}
                       onChange={(x) =>
-                        set(
-                          "posts",
-                          v.posts.map((p, j) =>
-                            j === i
-                              ? {
-                                  ...p,
-                                  title: x,
-                                  slug:
-                                    !p.slug || p.slug === slugify(p.title)
-                                      ? slugify(x)
-                                      : p.slug,
-                                  image: p.image || `news-${slugify(x) || p.id}`,
-                                }
-                              : p,
-                          ),
-                        )
+                        updatePost(i, {
+                          title: x,
+                          slug:
+                            !post.slug || post.slug === slugify(post.title)
+                              ? slugify(x)
+                              : post.slug,
+                        })
                       }
                       multiline
                       rows={2}
                     />
                     <div className="grid gap-4 sm:grid-cols-2">
                       <AdminField
-                        label="Slug"
+                        label="Slug (URL: /news/…)"
                         value={post.slug}
                         onChange={(x) =>
-                          set(
-                            "posts",
-                            v.posts.map((p, j) =>
-                              j === i
-                                ? {
-                                    ...p,
-                                    slug: slugify(x) || x,
-                                    image: p.image?.startsWith("news-")
-                                      ? `news-${slugify(x) || x}`
-                                      : p.image,
-                                  }
-                                : p,
-                            ),
-                          )
+                          updatePost(i, {
+                            slug: slugify(x) || x,
+                          })
                         }
                       />
                       <AdminField
                         label="Date (YYYY-MM-DD)"
                         value={post.date}
-                        onChange={(x) =>
-                          set(
-                            "posts",
-                            v.posts.map((p, j) => (j === i ? { ...p, date: x } : p)),
-                          )
-                        }
+                        onChange={(x) => updatePost(i, { date: x })}
                       />
                     </div>
                     <label className="block">
@@ -254,14 +264,7 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
                       <select
                         value={post.category}
                         onChange={(e) =>
-                          set(
-                            "posts",
-                            v.posts.map((p, j) =>
-                              j === i
-                                ? { ...p, category: e.target.value as NewsCategory }
-                                : p,
-                            ),
-                          )
+                          updatePost(i, { category: e.target.value as NewsCategory })
                         }
                         className={adminInputClass}
                       >
@@ -273,47 +276,48 @@ export function AdminNewsEditor({ content, images, defaults }: Props) {
                       </select>
                     </label>
                     <AdminField
-                      label="Excerpt"
+                      label="Excerpt (list summary under the title)"
                       value={post.excerpt}
-                      onChange={(x) =>
-                        set(
-                          "posts",
-                          v.posts.map((p, j) => (j === i ? { ...p, excerpt: x } : p)),
-                        )
-                      }
+                      onChange={(x) => updatePost(i, { excerpt: x })}
                       multiline
-                      rows={3}
+                      rows={2}
                     />
                     <label className="block">
                       <span className="mb-1.5 block text-[0.7rem] font-medium uppercase tracking-[0.08em] text-ist-dim">
-                        Body
+                        Body (detail page — blank line = new paragraph)
                       </span>
                       <AutoTextarea
                         value={post.body}
-                        minRows={5}
-                        onChange={(x) =>
-                          set(
-                            "posts",
-                            v.posts.map((p, j) => (j === i ? { ...p, body: x } : p)),
-                          )
-                        }
+                        minRows={6}
+                        onChange={(x) => updatePost(i, { body: x })}
                         className={adminInputClass}
                       />
                     </label>
                   </div>
-                  <AdminImageSlot
-                    imageKey={imageKey}
-                    label="Image"
-                    asset={imgAsset(imageKey)}
-                    busy={busyKey === imageKey}
-                    onUpload={(key, file) => {
-                      void onUpload(key, file);
-                      set(
-                        "posts",
-                        v.posts.map((p, j) => (j === i ? { ...p, image: key } : p)),
-                      );
-                    }}
-                  />
+                  <div>
+                    <AdminImageSlot
+                      imageKey={imageKey}
+                      label="Image (optional)"
+                      asset={imgAsset(imageKey)}
+                      busy={busyKey === imageKey}
+                      onUpload={(key, file) => {
+                        void onUpload(key, file);
+                        updatePost(i, { image: key });
+                      }}
+                    />
+                    <p className="mt-2 text-[0.72rem] leading-snug text-ist-dim">
+                      Not required for the basic list layout.
+                    </p>
+                    {post.image ? (
+                      <button
+                        type="button"
+                        className="mt-2 text-[0.75rem] text-ist-muted underline-offset-2 hover:underline"
+                        onClick={() => updatePost(i, { image: undefined })}
+                      >
+                        Clear image
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               );
             })}

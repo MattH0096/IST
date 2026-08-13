@@ -276,7 +276,7 @@ export type SiteOverrides = {
     titleLine1?: string;
     titleLine2?: string;
     lead?: string;
-    /** Full list of open roles. Empty by default — no invented listings. */
+    /** Full list of open roles. Defaults seed until CMS saves a list. */
     roles?: {
       id?: string;
       slug?: string;
@@ -285,6 +285,8 @@ export type SiteOverrides = {
       location?: string;
       type?: "Full-time" | "Part-time" | "Contract" | "Internship";
       summary?: string;
+      /** Full job description (detail page). */
+      body?: string;
     }[];
   };
   /** Image key → uploaded asset (replaces processed /img/* plate). */
@@ -357,4 +359,9 @@ export const ABOUT_IMAGE_KEYS = [
 ] as const;
 export const CONTACT_IMAGE_KEYS = ["map-denver", "band-contact-help"] as const;
 export const INSIGHTS_IMAGE_KEYS = ["insights-hero", "insights-cover", "band-vision"] as const;
-export const NEWS_IMAGE_KEYS = ["news-hero", "band-vision"] as const;
+export const NEWS_IMAGE_KEYS = [
+  "news-hero",
+  "news-spaceapp",
+  "news-research-series",
+  "band-vision",
+] as const;

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -9,9 +10,11 @@ import {
   joinLines,
   split2,
 } from "@/components/admin/form-shared";
+import { AutoTextarea } from "@/components/admin/AutoTextarea";
 import type { SiteContent } from "@/lib/cms/content";
 import { newId, slugify } from "@/lib/cms/id";
 import { ROLE_TYPES, type RoleType } from "@/lib/cms/types";
+import { DEFAULT_CAREERS_ROLES } from "@/lib/careers";
 
 type Props = {
   content: SiteContent["careers"];
@@ -29,16 +32,36 @@ function emptyRole(): Role {
     location: "",
     type: "Full-time",
     summary: "",
+    body: "",
   };
 }
 
 export function AdminCareersEditor({ content }: Props) {
-  const [v, setV] = useState(content);
+  const [v, setV] = useState(() => ({
+    ...content,
+    roles: content.roles.length > 0 ? content.roles : DEFAULT_CAREERS_ROLES.map((r) => ({
+      id: r.id ?? r.slug,
+      slug: r.slug,
+      title: r.title,
+      team: r.team,
+      location: r.location,
+      type: r.type,
+      summary: r.summary,
+      body: r.body ?? "",
+    })),
+  }));
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
 
   function set<K extends keyof typeof v>(key: K, value: (typeof v)[K]) {
     setV((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function updateRole(i: number, patch: Partial<Role>) {
+    set(
+      "roles",
+      v.roles.map((r, j) => (j === i ? { ...r, ...patch } : r)),
+    );
   }
 
   async function onSave(e: React.FormEvent) {
@@ -56,6 +79,7 @@ export function AdminCareersEditor({ content }: Props) {
         location: role.location.trim(),
         type: role.type,
         summary: role.summary.trim(),
+        body: role.body.trim(),
       };
     });
 
@@ -90,8 +114,9 @@ export function AdminCareersEditor({ content }: Props) {
     <form onSubmit={onSave} className="max-w-4xl">
       <h1 className="text-[1.75rem] font-semibold tracking-tight">Careers</h1>
       <p className="mt-2 text-[0.95rem] text-ist-muted">
-        Add, edit, or remove real open roles. Click <strong className="text-ist-text">Save careers</strong>{" "}
-        at the bottom — adding a role alone does not publish it.
+        Add, edit, or remove open roles. Summary shows on the careers list; body is the full
+        detail page at <code className="text-ist-text">/careers/[slug]</code>. Click{" "}
+        <strong className="text-ist-text">Save careers</strong> to publish.
       </p>
 
       <div className="mt-8 flex flex-col gap-8">
@@ -117,7 +142,10 @@ export function AdminCareersEditor({ content }: Props) {
           </div>
         </AdminSectionForm>
 
-        <AdminSectionForm title="Open roles" hint="Shown on /careers. Apply opens the on-page form.">
+        <AdminSectionForm
+          title="Open roles"
+          hint="List cards use summary. Detail pages use body (blank line = paragraph; lines starting with • = bullets)."
+        >
           <div className="flex flex-col gap-6">
             {v.roles.length === 0 ? (
               <p className="text-[0.9rem] text-ist-muted">No roles yet. Add one when you have an opening.</p>
@@ -127,56 +155,56 @@ export function AdminCareersEditor({ content }: Props) {
               <div key={role.id} className="grid gap-4 border border-ist-line/70 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-[0.85rem] font-medium text-ist-accent-bright">Role {i + 1}</p>
-                  <button
-                    type="button"
-                    className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
-                    onClick={() => set("roles", v.roles.filter((_, j) => j !== i))}
-                  >
-                    Remove
-                  </button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {role.slug ? (
+                      <Link
+                        href={`/careers/${role.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
+                      >
+                        View page
+                      </Link>
+                    ) : null}
+                    <button
+                      type="button"
+                      className="text-[0.8rem] text-ist-muted underline-offset-2 hover:text-ist-accent-bright hover:underline"
+                      onClick={() => set("roles", v.roles.filter((_, j) => j !== i))}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
                 <AdminField
                   label="Title"
                   value={role.title}
                   onChange={(x) =>
-                    set(
-                      "roles",
-                      v.roles.map((r, j) => (j === i ? { ...r, title: x } : r)),
-                    )
+                    updateRole(i, {
+                      title: x,
+                      slug:
+                        !role.slug || role.slug === slugify(role.title)
+                          ? slugify(x)
+                          : role.slug,
+                    })
                   }
                 />
                 <div className="grid gap-4 sm:grid-cols-2">
                   <AdminField
-                    label="Slug"
+                    label="Slug (URL: /careers/…)"
                     value={role.slug}
-                    onChange={(x) =>
-                      set(
-                        "roles",
-                        v.roles.map((r, j) => (j === i ? { ...r, slug: x } : r)),
-                      )
-                    }
+                    onChange={(x) => updateRole(i, { slug: slugify(x) || x })}
                   />
                   <AdminField
                     label="Team"
                     value={role.team}
-                    onChange={(x) =>
-                      set(
-                        "roles",
-                        v.roles.map((r, j) => (j === i ? { ...r, team: x } : r)),
-                      )
-                    }
+                    onChange={(x) => updateRole(i, { team: x })}
                   />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <AdminField
                     label="Location"
                     value={role.location}
-                    onChange={(x) =>
-                      set(
-                        "roles",
-                        v.roles.map((r, j) => (j === i ? { ...r, location: x } : r)),
-                      )
-                    }
+                    onChange={(x) => updateRole(i, { location: x })}
                   />
                   <label className="flex flex-col gap-2 text-[0.85rem]">
                     <span className="text-ist-muted">Type</span>
@@ -184,12 +212,7 @@ export function AdminCareersEditor({ content }: Props) {
                       className={adminInputClass}
                       value={role.type}
                       onChange={(e) =>
-                        set(
-                          "roles",
-                          v.roles.map((r, j) =>
-                            j === i ? { ...r, type: e.target.value as RoleType } : r,
-                          ),
-                        )
+                        updateRole(i, { type: e.target.value as RoleType })
                       }
                     >
                       {ROLE_TYPES.map((t) => (
@@ -201,17 +224,23 @@ export function AdminCareersEditor({ content }: Props) {
                   </label>
                 </div>
                 <AdminField
-                  label="Summary"
+                  label="Summary (list card)"
                   value={role.summary}
-                  onChange={(x) =>
-                    set(
-                      "roles",
-                      v.roles.map((r, j) => (j === i ? { ...r, summary: x } : r)),
-                    )
-                  }
+                  onChange={(x) => updateRole(i, { summary: x })}
                   multiline
                   rows={3}
                 />
+                <label className="block">
+                  <span className="mb-1.5 block text-[0.7rem] font-medium uppercase tracking-[0.08em] text-ist-dim">
+                    Body (detail page)
+                  </span>
+                  <AutoTextarea
+                    value={role.body}
+                    minRows={10}
+                    onChange={(x) => updateRole(i, { body: x })}
+                    className={adminInputClass}
+                  />
+                </label>
               </div>
             ))}
 

@@ -36,14 +36,24 @@ function RoleCard({ role }: { role: CareersRoleCard }) {
       body={role.summary}
       icon={<CareersRoleMark size={44} />}
       footer={
-        <Button
-          href={`/careers?role=${encodeURIComponent(role.slug)}#apply`}
-          variant="ghost"
-          withArrow
-          className="!min-h-0 !px-0 text-ist-accent-bright"
-        >
-          {OPEN_ROLES.apply}
-        </Button>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <Button
+            href={`/careers/${role.slug}`}
+            variant="ghost"
+            withArrow
+            className="!min-h-0 !px-0 text-ist-accent-bright"
+          >
+            {OPEN_ROLES.learnMore}
+          </Button>
+          <Button
+            href={`/careers?role=${encodeURIComponent(role.slug)}#apply`}
+            variant="ghost"
+            withArrow
+            className="!min-h-0 !px-0 text-ist-text"
+          >
+            {OPEN_ROLES.apply}
+          </Button>
+        </div>
       }
     />
   );

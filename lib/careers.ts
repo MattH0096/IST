@@ -5,8 +5,8 @@
  * are presentation structure for the careers page — soft team language only,
  * no product claims beyond what the hero + hiring line already say.
  *
- * `ROLES` ships empty: the spec forbids invented roles. Three blank cards
- * render for layout review until real openings are added here.
+ * Open roles: `DEFAULT_CAREERS_ROLES` seeds the site until CMS saves
+ * `careers.roles` via `/admin/careers`.
  */
 
 export const CAREERS = {
@@ -97,7 +97,7 @@ export const OPEN_ROLES = {
   apply: "Apply",
   applyHeading: "Apply",
   applyLead: "Tell us about yourself. Attach a resume if you have one.",
-  learnMore: "Apply",
+  learnMore: "View role",
 } as const;
 
 /** @deprecated Blank cards removed — public page shows empty state instead. */
@@ -156,6 +156,7 @@ export const CAREERS_CTA = {
 } as const;
 
 export type Role = {
+  id?: string;
   slug: string;
   title: string;
   team: string;
@@ -163,9 +164,168 @@ export type Role = {
   location: string;
   type: "Full-time" | "Part-time" | "Contract" | "Internship";
   summary: string;
+  /** Full job description; paragraphs separated by blank lines. */
+  body?: string;
   /** Where an application goes. Use the contact form unless a board is set up. */
-  applyHref: string;
+  applyHref?: string;
 };
 
-/** Empty by design — no invented listings (§9.9). */
-export const ROLES: Role[] = [];
+/** Seed roles when CMS has no `careers.roles` yet. */
+export const DEFAULT_CAREERS_ROLES: Role[] = [
+  {
+    id: "role-networking-software-developer",
+    slug: "networking-software-developer",
+    title: "Networking Software Developer",
+    team: "Engineering",
+    location: "United States",
+    type: "Part-time",
+    summary:
+      "Core contributor to IST's mesh state synchronization software — systems-level Python at the protocol layer for contested, dynamic networks.",
+    body: [
+      "At IST we're building intelligent networking infrastructure for environments where failure isn't an option. We're small, we move fast, and we care deeply about the technical depth of our work. If you want to own problems end to end and build something that matters, read on.",
+      "We're an early-stage startup building mesh networking infrastructure for contested, dynamic environments — satellites, drones, tactical communications. We don't build things that have been built before.",
+      "This is not a maintenance role. It's an opportunity for engineers who want to own hard problems end to end and have direct influence on product direction. If you're adaptable, collaborative, and energized by the challenge of building something from the ground up alongside a small, highly motivated team, we want to hear from you.",
+      "About the Role",
+      "You'll be a core contributor to IST's mesh state synchronization software — a distributed bundle propagation system designed to operate in dynamic, contested network environments including satellite constellations, drone swarms, and tactical radio networks. This is systems-level Python work at the protocol layer, not application development.",
+      "Qualifications",
+      "Required:",
+      "• Python (strong, systems-level — not web/scripting)",
+      "• Distributed systems design and implementation",
+      "• Network socket programming (TCP/UDP, raw sockets)",
+      "• Concurrent and async programming (asyncio, threading, multiprocessing)",
+      "• Message passing and inter-process communication",
+      "• Protocol design and implementation experience",
+      "• Data serialization (Protocol Buffers, MessagePack, or similar)",
+      "• Version control (Git)",
+      "• 10+ years software development experience",
+      "Desired:",
+      "• Delay-tolerant networking (DTN) — ideally Bundle Protocol (RFC 5050/9171)",
+      "• P2P network architecture (BitTorrent, Kademlia, or similar)",
+      "• MANET or mesh network protocol experience",
+      "• Software-defined networking concepts",
+      "• Link-state or distance-vector routing protocol internals",
+      "• Experience with challenged/contested network environments",
+      "• Rust or C++ (relevant for Phase II production implementation)",
+      "• Linux systems programming",
+      "• Prior DoD, aerospace, or defense software experience",
+      "• Familiarity with government software development practices",
+      "Compensation and Details",
+      "This is a temporary, part-time exempt position based on approximately 25 hours per week. Starting salary range is $2000-$3500 per week dependent upon qualifications and experience, paid on a regular payroll cycle. Workload will naturally ebb and flow with sprint cycles.",
+      "IST anticipates hiring for this position upon contract award, expected September 2026. Offers are contingent upon funding authorization.",
+      "This position requires U.S. citizenship. Candidates must be currently residing in the United States. Employment is contingent upon successful completion of a background check.",
+    ].join("\n\n"),
+  },
+  {
+    id: "role-networking-simulation-software-developer",
+    slug: "networking-simulation-software-developer",
+    title: "Networking Simulation Software Developer",
+    team: "Engineering",
+    location: "United States",
+    type: "Part-time",
+    summary:
+      "Core contributor to IST's Mesh Network Simulator — scientific Python for modeling dynamic, contested network topologies.",
+    body: [
+      "At IST we're building intelligent networking infrastructure for environments where failure isn't an option. We're small, we move fast, and we care deeply about the technical depth of our work. If you want to own problems end to end and build something that matters, read on.",
+      "We're an early-stage startup building mesh networking infrastructure for contested, dynamic environments — satellites, drones, tactical communications. We don't build things that have been built before.",
+      "This is not a maintenance role. It's an opportunity for engineers who want to own hard problems end to end and have direct influence on product direction. If you're adaptable, collaborative, and energized by the challenge of building something from the ground up alongside a small, highly motivated team, we want to hear from you.",
+      "About the Role",
+      "You'll be a core contributor to IST's Mesh Network Simulator — a discrete-event simulation environment designed to model dynamic, contested network topologies including satellite constellations, drone swarms, and tactical radio networks. This is scientific Python work at the systems level, not scripting or web development. You'll be building the simulation engine that validates IST's mesh state synchronization software by modeling real-world network conditions including link quality variation, node mobility, propagation delay, and topology change.",
+      "Qualifications",
+      "Required:",
+      "• Python (strong, scientific/engineering computing)",
+      "• Network simulation or emulation experience",
+      "• Graph modeling and dynamic topology representation (NetworkX or similar)",
+      "• Statistical modeling of link quality, latency, and packet loss",
+      "• Simulation event loop design (discrete event simulation)",
+      "• Data collection, metrics instrumentation, and results analysis",
+      "• Scientific Python stack (NumPy, SciPy, Pandas, Matplotlib)",
+      "• Version control (Git)",
+      "• 10+ years software development experience",
+      "Desired:",
+      "• ns-3, OMNeT++, or OPNET/Riverbed Modeler experience",
+      "• Satellite constellation modeling or orbital mechanics familiarity",
+      "• LEO/pLEO network simulation (Starlink-style dynamic topologies)",
+      "• RF propagation modeling and link budget concepts",
+      "• Mobility modeling for aerial or maritime platforms",
+      "• Visualization of dynamic network state (real-time or replay)",
+      "• Prior DoD, aerospace, or defense software experience",
+      "• Familiarity with STK or GMAT",
+      "• Docker or containerization for reproducible simulation environments",
+      "Compensation and Details",
+      "This is a temporary, part-time exempt position based on approximately 25 hours per week. Starting salary range is $2000-$3500 per week dependent upon qualifications and experience, paid on a regular payroll cycle. Workload will naturally ebb and flow with sprint cycles.",
+      "IST anticipates hiring for this position upon contract award, expected September 2026. Offers are contingent upon funding authorization.",
+      "This position requires U.S. citizenship. Candidates must be currently residing in the United States. Employment is contingent upon successful completion of a background check.",
+    ].join("\n\n"),
+  },
+];
+
+/** Empty when CMS overrides provide the live list — defaults live in DEFAULT_CAREERS_ROLES. */
+export const ROLES: Role[] = DEFAULT_CAREERS_ROLES;
+
+const ROLE_SECTION_HEADINGS = new Set([
+  "About the Role",
+  "Qualifications",
+  "Compensation and Details",
+]);
+
+const ROLE_SUBHEADINGS = new Set(["Required:", "Desired:"]);
+
+/** Parse JD body into renderable blocks. */
+export function parseRoleBody(body: string): Array<
+  | { type: "heading"; text: string }
+  | { type: "subheading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "list"; items: string[] }
+> {
+  const lines = body.replace(/\r\n/g, "\n").split("\n");
+  const blocks: Array<
+    | { type: "heading"; text: string }
+    | { type: "subheading"; text: string }
+    | { type: "paragraph"; text: string }
+    | { type: "list"; items: string[] }
+  > = [];
+  let para: string[] = [];
+  let list: string[] = [];
+
+  function flushPara() {
+    const text = para.join(" ").trim();
+    if (text) blocks.push({ type: "paragraph", text });
+    para = [];
+  }
+
+  function flushList() {
+    if (list.length) blocks.push({ type: "list", items: list });
+    list = [];
+  }
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) {
+      flushList();
+      flushPara();
+      continue;
+    }
+    if (ROLE_SECTION_HEADINGS.has(line)) {
+      flushList();
+      flushPara();
+      blocks.push({ type: "heading", text: line });
+      continue;
+    }
+    if (ROLE_SUBHEADINGS.has(line)) {
+      flushList();
+      flushPara();
+      blocks.push({ type: "subheading", text: line.replace(/:$/, "") });
+      continue;
+    }
+    if (line.startsWith("•") || line.startsWith("-") || line.startsWith("*")) {
+      flushPara();
+      list.push(line.replace(/^[•\-*]\s*/, "").trim());
+      continue;
+    }
+    flushList();
+    para.push(line);
+  }
+  flushList();
+  flushPara();
+  return blocks;
+}

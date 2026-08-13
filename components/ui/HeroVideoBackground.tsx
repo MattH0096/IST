@@ -13,9 +13,18 @@ type Props = {
   fadeBottom?: boolean;
 };
 
+function isBootBlocking() {
+  try {
+    return document.documentElement.getAttribute("data-boot") === "1";
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Full-bleed muted hero video. No still poster — page base colour until play.
  * Bottom edge dissolves into site black so the cut into the next section is soft.
+ * Stays paused at t=0 while the first-visit boot video owns the screen.
  */
 export function HeroVideoBackground({
   sources,
@@ -45,6 +54,23 @@ export function HeroVideoBackground({
     el.defaultPlaybackRate = rate;
   }, [rate]);
 
+  const playFromStart = useCallback(() => {
+    const el = videoRef.current;
+    if (!el || isBootBlocking()) return;
+    applyRate();
+    try {
+      el.currentTime = 0;
+    } catch {
+      /* ignore seek before ready */
+    }
+    const start = el.play();
+    if (start) {
+      start.catch(() => {
+        /* Autoplay can be blocked; hero stays on the page base colour. */
+      });
+    }
+  }, [applyRate]);
+
   useEffect(() => {
     if (reduceMotion) return;
     const el = videoRef.current;
@@ -59,13 +85,38 @@ export function HeroVideoBackground({
     el.load();
     applyRate();
 
-    const start = el.play();
-    if (start) {
-      start.catch(() => {
-        /* Autoplay can be blocked; hero stays on the page base colour. */
-      });
+    if (isBootBlocking()) {
+      el.pause();
+      try {
+        el.currentTime = 0;
+      } catch {
+        /* ignore */
+      }
+    } else {
+      playFromStart();
     }
-  }, [index, reduceMotion, applyRate, sources]);
+
+    const onBootAttr = () => {
+      if (isBootBlocking()) {
+        el.pause();
+        try {
+          el.currentTime = 0;
+        } catch {
+          /* ignore */
+        }
+        return;
+      }
+      playFromStart();
+    };
+
+    const mo = new MutationObserver(onBootAttr);
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-boot"],
+    });
+
+    return () => mo.disconnect();
+  }, [index, reduceMotion, applyRate, playFromStart, sources]);
 
   if (reduceMotion) {
     return <div className={cn("absolute inset-0 -z-10 bg-ist-bg", className)} aria-hidden="true" />;
@@ -80,9 +131,9 @@ export function HeroVideoBackground({
         className="h-full w-full object-cover"
         muted
         playsInline
-        autoPlay
+        /* No autoPlay — playback starts only when first-visit boot is clear. */
         loop={!multi}
-        preload="auto"
+        preload="metadata"
         onEnded={() => {
           if (multi) setIndex((i) => (i + 1) % sources.length);
         }}

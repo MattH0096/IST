@@ -149,6 +149,16 @@
     "width": 1672,
     "height": 941
   },
+  "news-spaceapp": {
+    "src": "/img/news-spaceapp.webp",
+    "width": 1672,
+    "height": 941
+  },
+  "news-research-series": {
+    "src": "/img/news-research-series.webp",
+    "width": 1672,
+    "height": 941
+  },
   "about-statement": {
     "src": "/img/about-statement.webp",
     "width": 1600,

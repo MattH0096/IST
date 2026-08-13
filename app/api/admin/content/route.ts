@@ -29,7 +29,9 @@ export async function PUT(request: Request) {
     const saved = await patchOverrides(body);
     revalidatePath("/", "layout");
     revalidatePath("/careers");
+    revalidatePath("/careers", "layout");
     revalidatePath("/news");
+    revalidatePath("/news", "layout");
     revalidatePath("/insights");
     revalidatePath("/contact");
     revalidatePath("/about");

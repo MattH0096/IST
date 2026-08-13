@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 
-import { NewsCard, NewsFeatured, type NewsPostView } from "@/components/news/NewsCards";
+import { NewsCard, type NewsPostView } from "@/components/news/NewsCards";
 import { NewsFilterIcon } from "@/components/news/NewsIcons";
 import { cn } from "@/lib/cn";
 import {
   CATEGORY_LABELS,
   NEWS_CATEGORIES,
+  sortNewsPosts,
   type NewsCategory,
 } from "@/lib/news";
 
@@ -21,19 +22,16 @@ type Props = {
 };
 
 /**
- * News index — filters + featured + card grid.
- * Empty list shows a quiet message (no skeleton placeholders).
+ * News index — filters + equal-size image rows.
  */
 export function NewsIndex({ posts: source }: Props) {
   const [active, setActive] = useState<Filter>("all");
 
   const posts = useMemo(() => {
-    const sorted = [...source].sort((a, b) => b.date.localeCompare(a.date));
+    const sorted = sortNewsPosts(source);
     return active === "all" ? sorted : sorted.filter((post) => post.category === active);
   }, [active, source]);
 
-  const featured = posts[0] ?? null;
-  const rest = featured ? posts.slice(1) : [];
   const empty = posts.length === 0;
 
   return (
@@ -67,7 +65,7 @@ export function NewsIndex({ posts: source }: Props) {
         </div>
       ) : null}
 
-      <div className={cn(source.length > 0 ? "mt-8 sm:mt-10" : "", "space-y-5 sm:space-y-6")}>
+      <div className={cn(source.length > 0 ? "mt-8 sm:mt-10" : "")}>
         {empty ? (
           <p className="max-w-xl text-[0.95rem] leading-relaxed text-ist-muted">
             {source.length === 0
@@ -75,18 +73,13 @@ export function NewsIndex({ posts: source }: Props) {
               : `No posts in ${LABELS[active].toLowerCase()} yet.`}
           </p>
         ) : (
-          <>
-            {featured ? <NewsFeatured post={featured} /> : null}
-            {rest.length > 0 ? (
-              <ul className="grid gap-4 sm:gap-5 lg:grid-cols-2">
-                {rest.map((post) => (
-                  <li key={post.slug}>
-                    <NewsCard post={post} />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </>
+          <ul>
+            {posts.map((post) => (
+              <li key={post.slug}>
+                <NewsCard post={post} />
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>

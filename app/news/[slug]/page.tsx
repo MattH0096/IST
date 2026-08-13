@@ -3,10 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { NewsCalendarIcon, NewsFilterIcon } from "@/components/news/NewsIcons";
+import { NewsPager } from "@/components/news/NewsPager";
 import { Container } from "@/components/ui/Container";
 import { getSiteContent } from "@/lib/cms/content";
-import { CATEGORY_LABELS } from "@/lib/news";
+import {
+  formatNewsDetailDate,
+  formatNewsListDate,
+  getAdjacentNewsPosts,
+} from "@/lib/news";
 import { tryImg } from "@/lib/images.server";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -35,11 +39,7 @@ export default async function NewsPostPage({ params }: Props) {
     .map((p) => p.trim())
     .filter(Boolean);
 
-  const dateLabel = new Date(post.date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { previous, next } = getAdjacentNewsPosts(content.news.posts, post.slug);
 
   return (
     <article className="section-y bg-ist-bg">
@@ -53,18 +53,14 @@ export default async function NewsPostPage({ params }: Props) {
           </Link>
         </p>
 
-        <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.16em] text-ist-accent-bright">
-          {CATEGORY_LABELS[post.category]}
+        <p className="text-[0.9rem] text-ist-text/90">
+          <time dateTime={post.date}>{formatNewsListDate(post.date)}</time>
         </p>
-        <h1 className="mt-3 text-[1.75rem] font-semibold leading-tight tracking-tight text-ist-text sm:text-[2.1rem]">
+        <h1 className="mt-5 text-[1.65rem] font-bold uppercase leading-[1.15] tracking-tight text-ist-accent-bright sm:text-[2rem] lg:text-[2.25rem]">
           {post.title}
         </h1>
-        <p className="mt-4 inline-flex flex-wrap items-center gap-2 text-[0.85rem] text-ist-dim">
-          <NewsFilterIcon name={post.category} size={14} className="text-ist-muted" />
-          <span className="inline-flex items-center gap-1.5">
-            <NewsCalendarIcon className="text-ist-muted" />
-            <time dateTime={post.date}>{dateLabel}</time>
-          </span>
+        <p className="mt-3 text-[0.8rem] text-ist-dim">
+          <time dateTime={post.date}>{formatNewsDetailDate(post.date)}</time>
         </p>
 
         {asset ? (
@@ -76,12 +72,13 @@ export default async function NewsPostPage({ params }: Props) {
               alt=""
               className="h-full w-full object-cover"
               priority
+              sizes="(min-width: 768px) 48rem, 100vw"
             />
           </div>
         ) : null}
 
         {post.excerpt ? (
-          <p className="mt-8 text-[1.05rem] leading-relaxed text-ist-muted">{post.excerpt}</p>
+          <p className="mt-8 text-[1.05rem] leading-relaxed text-ist-text">{post.excerpt}</p>
         ) : null}
 
         <div className="mt-8 flex flex-col gap-5 text-[1rem] leading-relaxed text-ist-text/90">
@@ -91,6 +88,8 @@ export default async function NewsPostPage({ params }: Props) {
             <p className="text-ist-muted">Full story coming soon.</p>
           )}
         </div>
+
+        <NewsPager previous={previous} next={next} />
       </Container>
     </article>
   );

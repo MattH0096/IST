@@ -3,7 +3,7 @@ import "server-only";
 import { unstable_noStore as noStore } from "next/cache";
 
 import { ABOUT, HOW_WE_BUILD } from "@/lib/about";
-import { CAREERS } from "@/lib/careers";
+import { CAREERS, DEFAULT_CAREERS_ROLES } from "@/lib/careers";
 import { readOverrides } from "@/lib/cms/store";
 import type { RoleType, SiteOverrides, VisionOverrideFields } from "@/lib/cms/types";
 import { ROLE_TYPES } from "@/lib/cms/types";
@@ -30,7 +30,7 @@ import {
   INSIGHTS_INTRO,
   PAPERS,
 } from "@/lib/insights";
-import { NEWS_CATEGORIES, type NewsCategory } from "@/lib/news";
+import { NEWS_CATEGORIES, DEFAULT_NEWS_POSTS, type NewsCategory } from "@/lib/news";
 import { CRUCIBLE, LOCUS } from "@/lib/products";
 import {
   HARDWARE_NOTE,
@@ -507,7 +507,8 @@ export function buildContent(o: SiteOverrides) {
     })(),
     news: (() => {
       const n = o.news ?? {};
-      const posts = (n.posts ?? []).map((post, i) => {
+      const source = n.posts === undefined ? DEFAULT_NEWS_POSTS : n.posts;
+      const posts = source.map((post, i) => {
         const slug = (post.slug ?? `post-${i + 1}`).trim() || `post-${i + 1}`;
         const category = (NEWS_CATEGORIES as readonly string[]).includes(post.category ?? "")
           ? (post.category as NewsCategory)
@@ -538,7 +539,8 @@ export function buildContent(o: SiteOverrides) {
     })(),
     careers: (() => {
       const c = o.careers ?? {};
-      const roles = (c.roles ?? []).map((role, i) => {
+      const source = c.roles === undefined ? DEFAULT_CAREERS_ROLES : c.roles;
+      const roles = source.map((role, i) => {
         const slug = (role.slug ?? `role-${i + 1}`).trim() || `role-${i + 1}`;
         const type = (ROLE_TYPES as readonly string[]).includes(role.type ?? "")
           ? (role.type as RoleType)
@@ -551,6 +553,7 @@ export function buildContent(o: SiteOverrides) {
           location: (role.location ?? "").trim(),
           type,
           summary: (role.summary ?? "").trim(),
+          body: (role.body ?? "").trim(),
         };
       });
 
