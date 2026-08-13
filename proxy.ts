@@ -43,9 +43,9 @@ async function isValidSession(token: string | undefined, secret: string | undefi
 
 /**
  * Protect /admin (except login) and /api/admin (except login).
- * Uses Web Crypto so it runs on the Edge / proxy runtime.
+ * Next.js 16 Proxy runs on Node.js — session check uses Web Crypto.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isLoginPage = pathname === "/admin/login";
   const isLoginApi = pathname === "/api/admin/login";
