@@ -3,7 +3,7 @@ import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
 
-import { del, list, put } from "@vercel/blob";
+import { del, get, list, put, type PutBlobResult } from "@vercel/blob";
 
 import type { SiteOverrides } from "@/lib/cms/types";
 
@@ -11,6 +11,7 @@ const CONTENT_DIR = path.join(process.cwd(), "content");
 const OVERRIDES_PATH = path.join(CONTENT_DIR, "overrides.json");
 const BLOB_PREFIX = "cms/overrides/";
 const UPLOAD_PREFIX = "cms/uploads/";
+const LATEST_PATH = `${BLOB_PREFIX}latest.json`;
 
 let snapshot: SiteOverrides | null = null;
 
@@ -35,14 +36,56 @@ async function readFromFs(): Promise<SiteOverrides> {
   }
 }
 
+async function readBlobBody(pathnameOrUrl: string): Promise<SiteOverrides | null> {
+  for (const access of ["public", "private"] as const) {
+    try {
+      const result = await get(pathnameOrUrl, { access, useCache: false });
+      if (!result?.stream) continue;
+      const text = await new Response(result.stream).text();
+      return JSON.parse(text) as SiteOverrides;
+    } catch {
+      /* try next access mode */
+    }
+  }
+  return null;
+}
+
 async function readFromBlob(): Promise<SiteOverrides | null> {
+  const latest = await readBlobBody(LATEST_PATH);
+  if (latest) return latest;
+
   const { blobs } = await list({ prefix: BLOB_PREFIX, limit: 1000 });
   if (blobs.length === 0) return null;
-  const latest = blobs[blobs.length - 1];
-  if (!latest) return null;
-  const response = await fetch(latest.url, { cache: "no-store" });
-  if (!response.ok) return null;
-  return (await response.json()) as SiteOverrides;
+  const sorted = [...blobs].sort(
+    (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
+  );
+  const newest = sorted[0];
+  if (!newest) return null;
+  return readBlobBody(newest.pathname);
+}
+
+async function putBlob(
+  pathname: string,
+  body: string | Buffer,
+  contentType: string,
+): Promise<PutBlobResult> {
+  let lastError: unknown;
+  for (const access of ["public", "private"] as const) {
+    try {
+      return await put(pathname, body, {
+        access,
+        contentType,
+        addRandomSuffix: false,
+        allowOverwrite: true,
+        cacheControlMaxAge: 60,
+      });
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("Blob upload failed for both public and private access.");
 }
 
 /** Last loaded overrides (layout primes this so `img()` stays sync). */
@@ -76,23 +119,7 @@ export async function writeOverrides(next: SiteOverrides): Promise<SiteOverrides
   const body = `${JSON.stringify(payload, null, 2)}\n`;
 
   if (blobEnabled()) {
-    const stamp = payload.updatedAt!.replace(/[:.]/g, "-");
-    const pathname = `${BLOB_PREFIX}${stamp}.json`;
-    await put(pathname, body, {
-      access: "public",
-      contentType: "application/json",
-      addRandomSuffix: false,
-      cacheControlMaxAge: 60,
-    });
-
-    const { blobs } = await list({ prefix: BLOB_PREFIX, limit: 1000 });
-    const stale = blobs.filter((b) => b.pathname !== pathname);
-    if (stale.length) {
-      await del(stale.map((b) => b.url)).catch((error) => {
-        console.warn("[cms] could not prune old override blobs", error);
-      });
-    }
-
+    await putBlob(LATEST_PATH, body, "application/json");
     snapshot = payload;
     return payload;
   }
@@ -134,11 +161,7 @@ export function uploadsDir() {
 
 export async function putUpload(filename: string, data: Buffer, contentType: string) {
   if (blobEnabled()) {
-    const blob = await put(`${UPLOAD_PREFIX}${filename}`, data, {
-      access: "public",
-      contentType,
-      addRandomSuffix: false,
-    });
+    const blob = await putBlob(`${UPLOAD_PREFIX}${filename}`, data, contentType);
     return blob.url;
   }
 
@@ -152,4 +175,16 @@ export async function putUpload(filename: string, data: Buffer, contentType: str
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(path.join(dir, filename), data);
   return `/uploads/${filename}`;
+}
+
+/** Best-effort cleanup of old timestamped override files from earlier CMS versions. */
+export async function pruneOldOverrideBlobs() {
+  if (!blobEnabled()) return;
+  try {
+    const { blobs } = await list({ prefix: BLOB_PREFIX, limit: 1000 });
+    const stale = blobs.filter((b) => b.pathname !== LATEST_PATH);
+    if (stale.length) await del(stale.map((b) => b.url));
+  } catch (error) {
+    console.warn("[cms] could not prune old override blobs", error);
+  }
 }

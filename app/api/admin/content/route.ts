@@ -28,6 +28,15 @@ export async function PUT(request: Request) {
   try {
     const saved = await patchOverrides(body);
     revalidatePath("/", "layout");
+    revalidatePath("/careers");
+    revalidatePath("/news");
+    revalidatePath("/insights");
+    revalidatePath("/contact");
+    revalidatePath("/about");
+    revalidatePath("/solutions");
+    revalidatePath("/locus");
+    revalidatePath("/crucible");
+    revalidatePath("/");
     const content = await getSiteContent();
     return NextResponse.json({ ok: true, overrides: saved, content });
   } catch (error) {

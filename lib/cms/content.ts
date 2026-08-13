@@ -1,5 +1,7 @@
 import "server-only";
 
+import { unstable_noStore as noStore } from "next/cache";
+
 import { ABOUT, HOW_WE_BUILD } from "@/lib/about";
 import { CAREERS } from "@/lib/careers";
 import { readOverrides } from "@/lib/cms/store";
@@ -56,8 +58,9 @@ function visionFields(o: VisionOverrideFields = {}) {
   };
 }
 
-/** Merged site content for public pages + admin forms. */
+/** Merged site content for public pages + admin forms. Always fresh (CMS). */
 export async function getSiteContent() {
+  noStore();
   const o = await readOverrides();
   return buildContent(o);
 }

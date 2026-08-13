@@ -82,7 +82,7 @@ export function AdminCareersEditor({ content }: Props) {
       return;
     }
     setStatus("saved");
-    setMessage("Saved. Refresh Careers to see changes.");
+    setMessage("Saved. Open /careers in a new tab (hard refresh) to see the role.");
     setV((prev) => ({ ...prev, roles }));
   }
 
@@ -90,8 +90,8 @@ export function AdminCareersEditor({ content }: Props) {
     <form onSubmit={onSave} className="max-w-4xl">
       <h1 className="text-[1.75rem] font-semibold tracking-tight">Careers</h1>
       <p className="mt-2 text-[0.95rem] text-ist-muted">
-        Add, edit, or remove real open roles. The public page shows only saved roles — no blank
-        placeholder cards.
+        Add, edit, or remove real open roles. Click <strong className="text-ist-text">Save careers</strong>{" "}
+        at the bottom — adding a role alone does not publish it.
       </p>
 
       <div className="mt-8 flex flex-col gap-8">

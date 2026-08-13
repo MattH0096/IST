@@ -32,7 +32,10 @@ export function CareersApplySection({ roles }: Props) {
             <div className="mt-8 sm:mt-10">
               <Suspense
                 fallback={
-                  <div className="min-h-[28rem] rounded-3xl bg-white/90" aria-hidden="true" />
+                  <div
+                    className="min-h-[28rem] border border-ist-line bg-black/40"
+                    aria-hidden="true"
+                  />
                 }
               >
                 <CareersApplyForm roles={roles} />
