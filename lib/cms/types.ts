@@ -179,6 +179,8 @@ export type SiteOverrides = {
   contact?: {
     eyebrow?: string;
     title?: string;
+    titleLine1?: string;
+    titleLine2?: string;
     lead?: string;
     formTitle?: string;
     formLead?: string;

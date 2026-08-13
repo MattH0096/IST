@@ -29,7 +29,7 @@ export default async function ContactPage() {
     <>
       <PageHero
         eyebrow={c.eyebrow}
-        title={c.title}
+        title={[c.titleLine1, c.titleLine2]}
         lead={c.lead}
         video={["/video/contact-1.mp4", "/video/contact-2.mp4"]}
       />

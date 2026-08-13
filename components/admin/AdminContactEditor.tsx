@@ -7,6 +7,8 @@ import {
   AdminImageSlot,
   AdminSectionForm,
   adminInputClass,
+  joinLines,
+  split2,
 } from "@/components/admin/form-shared";
 import { AutoTextarea } from "@/components/admin/AutoTextarea";
 import type { SiteContent } from "@/lib/cms/content";
@@ -55,7 +57,9 @@ export function AdminContactEditor({ content, images, defaults }: Props) {
     const patch = {
       contact: {
         eyebrow: v.eyebrow,
-        title: v.title,
+        title: [v.titleLine1, v.titleLine2].filter(Boolean).join(" "),
+        titleLine1: v.titleLine1,
+        titleLine2: v.titleLine2,
         lead: v.lead,
         formTitle: v.formTitle,
         formLead: v.formLead,
@@ -104,9 +108,17 @@ export function AdminContactEditor({ content, images, defaults }: Props) {
           <div className="grid gap-4">
             <AdminField label="Eyebrow" value={v.eyebrow} onChange={(x) => set("eyebrow", x)} />
             <AdminField
-              label="Title"
-              value={v.title}
-              onChange={(x) => set("title", x)}
+              label="Title (two lines)"
+              value={joinLines([v.titleLine1, v.titleLine2])}
+              onChange={(x) => {
+                const [a, b] = split2(x);
+                setV((prev) => ({
+                  ...prev,
+                  titleLine1: a,
+                  titleLine2: b,
+                  title: [a, b].filter(Boolean).join(" "),
+                }));
+              }}
               multiline
               rows={2}
             />

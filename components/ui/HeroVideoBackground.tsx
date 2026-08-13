@@ -38,6 +38,9 @@ export function HeroVideoBackground({
   const applyRate = useCallback(() => {
     const el = videoRef.current;
     if (!el) return;
+    el.muted = true;
+    el.defaultMuted = true;
+    el.volume = 0;
     el.playbackRate = rate;
     el.defaultPlaybackRate = rate;
   }, [rate]);
@@ -49,6 +52,9 @@ export function HeroVideoBackground({
 
     const src = sources[index] ?? sources[0];
     if (!src) return;
+    el.muted = true;
+    el.defaultMuted = true;
+    el.volume = 0;
     el.src = src;
     el.load();
     applyRate();
@@ -82,6 +88,14 @@ export function HeroVideoBackground({
         }}
         onLoadedData={applyRate}
         onPlay={applyRate}
+        onVolumeChange={() => {
+          const el = videoRef.current;
+          if (!el) return;
+          if (!el.muted || el.volume > 0) {
+            el.muted = true;
+            el.volume = 0;
+          }
+        }}
         onRateChange={applyRate}
       />
       {fadeBottom ? (

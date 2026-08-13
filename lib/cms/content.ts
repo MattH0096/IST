@@ -332,12 +332,16 @@ export function buildContent(o: SiteOverrides) {
     })(),
     contact: (() => {
       const c = o.contact ?? {};
+      const titleLine1 = pick(c.titleLine1, "Let's Build the Future of");
+      const titleLine2 = pick(
+        c.titleLine2,
+        "Resilient Communication Together.",
+      );
       return {
         eyebrow: pick(c.eyebrow, "Contact"),
-        title: pick(
-          c.title,
-          "Let's Build the Future of Resilient Communication Together.",
-        ),
+        title: pick(c.title, `${titleLine1} ${titleLine2}`),
+        titleLine1,
+        titleLine2,
         lead: pick(
           c.lead,
           "Whether you're evaluating a mission challenge, exploring an investment, or looking to partner — we'd love to hear from you.",
