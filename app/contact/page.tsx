@@ -31,7 +31,7 @@ export default async function ContactPage() {
         eyebrow={c.eyebrow}
         title={c.title}
         lead={c.lead}
-        video="/video/Contact_us_page_backgro.mp4"
+        video={["/video/contact-1.mp4", "/video/contact-2.mp4"]}
       />
 
       <section className="section-y bg-ist-bg">

@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 import "lenis/dist/lenis.css";
@@ -10,11 +11,17 @@ type Props = {
 };
 
 /**
- * Sitewide smooth scroll (Lenis) — same approach as polished portfolio sites:
- * wheel input is lerped so the page eases into motion instead of jumping.
- * Honors prefers-reduced-motion via Lenis autoToggle.
+ * Sitewide smooth scroll (Lenis). Disabled on /admin — the admin shell is a
+ * fixed overflow panel, and Lenis would eat wheel events meant for that panel.
  */
 export function SmoothScroll({ children }: Props) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
+
+  if (isAdmin) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactLenis
       root

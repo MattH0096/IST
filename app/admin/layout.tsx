@@ -14,7 +14,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const configured = isAdminConfigured();
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0a0a] text-ist-text">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-[#0a0a0a] text-ist-text"
+      data-lenis-prevent
+    >
       <header className="border-b border-ist-line">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
           <div>
