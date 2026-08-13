@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { AerospaceField } from "@/components/ui/AerospaceField";
+import { RouteLoader } from "@/components/ui/RouteLoader";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { readOverrides } from "@/lib/cms/store";
 import { fontVariables } from "@/lib/fonts";
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </a>
 
         <SmoothScroll>
+          <RouteLoader />
           {/* Site-wide aerospace body background */}
           <AerospaceField className="aerospace-field--site" />
 
