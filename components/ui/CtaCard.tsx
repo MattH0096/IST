@@ -47,10 +47,10 @@ export function CtaCard({
             <div className="relative z-10 mx-auto w-full max-w-3xl text-center sm:max-w-4xl">
               {children}
 
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4">
+              <div className="mx-auto mt-8 grid w-full max-w-xl grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4">
                 <Link
                   href={primaryHref}
-                  className="btn btn--primary btn--lg inline-flex items-center gap-2.5"
+                  className="btn btn--primary btn--lg !max-w-none w-full"
                 >
                   {primaryCta}
                   <span aria-hidden="true">→</span>
@@ -58,8 +58,9 @@ export function CtaCard({
                 <Link
                   href={secondaryHref}
                   className={cn(
+                    "btn btn--lg !max-w-none w-full",
                     glassPanel,
-                    "inline-flex min-h-11 items-center gap-2.5 border-white/25 px-6 py-3 text-[0.95rem] font-medium text-ist-text transition-[border-color,background-color] duration-[180ms] ease-ist hover:border-ist-accent hover:bg-black/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ist-focus sm:px-8 sm:text-base",
+                    "border-white/25 text-ist-text hover:border-ist-accent hover:bg-black/35",
                   )}
                 >
                   {secondaryCta}

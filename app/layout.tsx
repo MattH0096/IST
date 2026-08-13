@@ -18,11 +18,25 @@ export const metadata: Metadata = {
   description:
     "IST builds resilient networking for environments where connectivity breaks. Information keeps moving through dynamic, intermittently connected networks until every intended destination receives what it needs.",
   applicationName: "IST",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  other: {
+    "msapplication-config": "/browserconfig.xml",
+  },
   // Deliberately no organisation schema here: it would require an email address.
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#050505",
   colorScheme: "dark",
 };
 
