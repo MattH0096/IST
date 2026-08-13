@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useState } from "react";
 
 import type { ImageAsset, ImageKey } from "@/lib/images";
@@ -44,8 +43,8 @@ export function AdminImageEditor({ keys, current, defaults }: Props) {
     <div>
       <h1 className="text-[1.75rem] font-semibold tracking-tight">Images</h1>
       <p className="mt-2 max-w-2xl text-[0.95rem] text-ist-muted">
-        Upload a new file to replace any site image. Uploads are converted to WebP and stored
-        under <code className="font-mono">/uploads</code>.
+        Upload a new file to replace any site image. Replacements save immediately (converted to
+        WebP). You can also replace images on each page editor — same result.
       </p>
 
       <input
@@ -65,8 +64,9 @@ export function AdminImageEditor({ keys, current, defaults }: Props) {
             <li key={key} className="border border-ist-line bg-black p-4">
               <p className="font-mono text-[0.75rem] text-ist-accent-bright">{key}</p>
               <div className="relative mt-3 aspect-[4/3] overflow-hidden border border-ist-line bg-[#050505]">
-                {asset ? (
-                  <Image
+                {asset?.src ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- admin preview; may be Blob URL
+                  <img
                     src={asset.src}
                     width={asset.width}
                     height={asset.height}

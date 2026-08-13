@@ -1,6 +1,5 @@
-﻿"use client";
+"use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 import { AutoTextarea } from "@/components/admin/AutoTextarea";
@@ -128,8 +127,9 @@ function ImageSlot({
           compact ? "aspect-[3/2] max-h-28" : "aspect-[4/3]"
         }`}
       >
-        {asset ? (
-          <Image
+        {asset?.src ? (
+          // eslint-disable-next-line @next/next/no-img-element -- admin preview; may be Blob URL
+          <img
             src={asset.src}
             width={asset.width}
             height={asset.height}
@@ -140,13 +140,14 @@ function ImageSlot({
       </div>
       <label className="mt-2 inline-flex cursor-pointer text-[0.8rem] text-ist-muted hover:text-ist-text">
         <span className="border border-ist-line px-2.5 py-1">
-          {busy ? "Uploadingâ€¦" : "Replace"}
+          {busy ? "Uploading…" : "Replace"}
         </span>
         <input
           type="file"
           accept="image/*"
           className="sr-only"
           disabled={busy}
+          form="ist-admin-upload"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) onUpload(imageKey, file);
@@ -154,6 +155,9 @@ function ImageSlot({
           }}
         />
       </label>
+      <p className="mt-1.5 text-[0.7rem] leading-snug text-ist-dim">
+        Saves immediately — no need to click Save.
+      </p>
     </div>
   );
 }
@@ -184,7 +188,7 @@ export function AdminHomeEditor({ content, images, defaults }: Props) {
     }
     const data = (await res.json()) as { asset: ImageAsset };
     setAssets((prev) => ({ ...prev, [key]: data.asset }));
-    setMessage(`Image updated.`);
+    setMessage("Image saved to the live site. You do not need to click Save for images.");
   }
 
   async function onSave(e: React.FormEvent) {
@@ -274,7 +278,7 @@ export function AdminHomeEditor({ content, images, defaults }: Props) {
     <form onSubmit={onSave} className="max-w-4xl">
       <h1 className="text-[1.75rem] font-semibold tracking-tight">Home</h1>
       <p className="mt-2 text-[0.95rem] text-ist-muted">
-        One form per section. Multi-line titles stay as one field — press Enter where the site
+        One form per section. Multi-line titles stay as one field � press Enter where the site
         breaks a line. Images upload immediately; save text at the bottom.
       </p>
 
@@ -405,7 +409,7 @@ export function AdminHomeEditor({ content, images, defaults }: Props) {
         </SectionForm>
 
         {/* How it works */}
-        <SectionForm title="How It Works" hint="Four steps â€” label, alt text, and image per row.">
+        <SectionForm title="How It Works" hint="Four steps — label, alt text, and image per row.">
           <Field
             label="Section title"
             value={v.howItWorksTitle}
@@ -577,7 +581,7 @@ export function AdminHomeEditor({ content, images, defaults }: Props) {
         {/* Applications */}
         <SectionForm
           title="Applications"
-          hint="Header, six tiles, then the closer band â€” all in this section."
+          hint="Header, six tiles, then the closer band — all in this section."
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <Field
@@ -829,7 +833,7 @@ export function AdminHomeEditor({ content, images, defaults }: Props) {
             disabled={status === "saving"}
             className="bg-ist-accent px-5 py-2.5 text-[0.95rem] font-medium text-white hover:bg-ist-accent-deep disabled:opacity-60"
           >
-            {status === "saving" ? "Savingâ€¦" : "Save all Home text"}
+            {status === "saving" ? "Saving…" : "Save all Home text"}
           </button>
           {message ? (
             <p

@@ -46,7 +46,7 @@ export function AdminSolutionsEditor({ content, images, defaults }: Props) {
     }
     const data = (await res.json()) as { asset: ImageAsset };
     setAssets((prev) => ({ ...prev, [key]: data.asset }));
-    setMessage("Image updated.");
+    setMessage("Image saved to the live site. You do not need to click Save for images.");
   }
 
   async function onSave(e: React.FormEvent) {
@@ -113,7 +113,7 @@ export function AdminSolutionsEditor({ content, images, defaults }: Props) {
       return;
     }
     setStatus("saved");
-    setMessage("Saved. Refresh the public Solutions page to see text changes.");
+    setMessage("Saved text. (Images save when you click Replace — not with this button.)");
   }
 
   const img = (key: string) => assets[key] ?? defaults[key];

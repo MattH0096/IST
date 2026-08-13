@@ -54,11 +54,6 @@
     "width": 1448,
     "height": 1051
   },
-  "section-platform-stack": {
-    "src": "/img/section-platform-stack.webp",
-    "width": 1600,
-    "height": 640
-  },
   "section-problem": {
     "src": "/img/section-problem.webp",
     "width": 1600,
@@ -121,11 +116,6 @@
   },
   "band-contact-help": {
     "src": "/img/band-contact-help.webp",
-    "width": 1600,
-    "height": 900
-  },
-  "contact-hero": {
-    "src": "/img/contact-hero.webp",
     "width": 1600,
     "height": 900
   },

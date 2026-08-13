@@ -46,7 +46,7 @@ export function AdminAboutEditor({ content, images, defaults }: Props) {
     }
     const data = (await res.json()) as { asset: ImageAsset };
     setAssets((prev) => ({ ...prev, [key]: data.asset }));
-    setMessage("Image updated.");
+    setMessage("Image saved to the live site. You do not need to click Save for images.");
   }
 
   async function onSave(e: React.FormEvent) {

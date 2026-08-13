@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { AutoTextarea } from "@/components/admin/AutoTextarea";
 import type { ImageAsset } from "@/lib/images";
 
@@ -118,8 +116,9 @@ export function AdminImageSlot({
           compact ? "aspect-[3/2] max-h-28" : "aspect-[4/3]"
         }`}
       >
-        {asset ? (
-          <Image
+        {asset?.src ? (
+          // eslint-disable-next-line @next/next/no-img-element -- admin preview; may be Blob URL
+          <img
             src={asset.src}
             width={asset.width}
             height={asset.height}
@@ -137,6 +136,8 @@ export function AdminImageSlot({
           accept="image/*"
           className="sr-only"
           disabled={busy}
+          // Keep uploads out of the parent text-save form submit path.
+          form="ist-admin-upload"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) onUpload(imageKey, file);
@@ -144,6 +145,9 @@ export function AdminImageSlot({
           }}
         />
       </label>
+      <p className="mt-1.5 text-[0.7rem] leading-snug text-ist-dim">
+        Saves immediately — no need to click Save.
+      </p>
     </div>
   );
 }

@@ -175,6 +175,7 @@ export async function writeOverrides(next: SiteOverrides): Promise<SiteOverrides
 }
 
 export async function patchOverrides(patch: SiteOverrides): Promise<SiteOverrides> {
+  // Fresh read every time (no reliance on in-memory snapshot alone).
   const current = await readOverrides();
   const merged: SiteOverrides = {
     ...current,
@@ -190,6 +191,31 @@ export async function patchOverrides(patch: SiteOverrides): Promise<SiteOverride
     careers: { ...current.careers, ...patch.careers },
     images: { ...current.images, ...patch.images },
   };
+
+  // Text save must not wipe a concurrent image upload.
+  // Re-read Blob images right before write; latest blob + this patch win.
+  if (blobEnabled()) {
+    try {
+      const latest = await readFromBlob();
+      if (latest?.images) {
+        merged.images = {
+          ...merged.images,
+          ...latest.images,
+          ...(patch.images ?? {}),
+        };
+      }
+      // Same for news/careers lists if this patch isn't replacing them.
+      if (!patch.news?.posts && latest?.news?.posts?.length) {
+        merged.news = { ...merged.news, posts: latest.news.posts };
+      }
+      if (!patch.careers?.roles && latest?.careers?.roles?.length) {
+        merged.careers = { ...merged.careers, roles: latest.careers.roles };
+      }
+    } catch (error) {
+      console.warn("[cms] pre-write refresh failed", error);
+    }
+  }
+
   return writeOverrides(merged);
 }
 

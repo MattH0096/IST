@@ -136,13 +136,7 @@ export const ASSETS = [
     treat: false,
     note: "Solutions — Distribution Intelligence / missing layer plate",
   },
-  {
-    slug: "section-platform-stack",
-    src: "Platform stack.png",
-    role: "diagram",
-    treat: false,
-    note: "Homepage Platform Stack",
-  },
+  // section-platform-stack removed — file never shipped; unused on site
 
   // ---------- Application tiles ----------
   {
@@ -204,13 +198,7 @@ export const ASSETS = [
     treat: false,
     note: "Contact page help / stay connected band",
   },
-  {
-    slug: "contact-hero",
-    src: "contact-hero.webp",
-    role: "hero",
-    treat: false,
-    note: "Contact page hero",
-  },
+  // contact-hero removed — Contact uses video heroes now
   {
     slug: "band-careers-lead",
     src: "Career.png",
