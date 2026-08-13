@@ -128,7 +128,7 @@ export function HeroVideoBackground({
     <div className={cn("absolute inset-0 -z-10 overflow-hidden bg-ist-bg", className)} aria-hidden="true">
       <video
         ref={videoRef}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover object-center"
         muted
         playsInline
         /* No autoPlay — playback starts only when first-visit boot is clear. */

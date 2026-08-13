@@ -1914,6 +1914,13 @@ main section.section-y.bg-ist-surface {
 }
 
 .logo-loader--boot-video {
+  /* Match homepage hero: one svh plane, not a different mobile 100vh box. */
+  inset: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100svh;
+  min-height: 100svh;
   background: #030303;
 }
 
@@ -1923,7 +1930,7 @@ main section.section-y.bg-ist-surface {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   background: #030303;
 }
 
@@ -1981,7 +1988,11 @@ html[data-loader="on"] {
 html[data-boot="1"] body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100svh;
+  min-height: 100svh;
   z-index: 199;
   background: #030303;
   pointer-events: none;
