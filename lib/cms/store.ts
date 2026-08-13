@@ -88,25 +88,63 @@ async function putBlob(
     : new Error("Blob upload failed for both public and private access.");
 }
 
+function mergeOverrides(base: SiteOverrides, overlay: SiteOverrides): SiteOverrides {
+  const overlayNewsPosts = overlay.news?.posts;
+  const overlayCareerRoles = overlay.careers?.roles;
+
+  return {
+    ...base,
+    ...overlay,
+    home: { ...base.home, ...overlay.home },
+    solutions: { ...base.solutions, ...overlay.solutions },
+    locus: { ...base.locus, ...overlay.locus },
+    crucible: { ...base.crucible, ...overlay.crucible },
+    about: { ...base.about, ...overlay.about },
+    contact: { ...base.contact, ...overlay.contact },
+    insights: { ...base.insights, ...overlay.insights },
+    news: {
+      ...base.news,
+      ...overlay.news,
+      // Prefer Blob lists only when they actually contain items.
+      posts:
+        overlayNewsPosts && overlayNewsPosts.length > 0
+          ? overlayNewsPosts
+          : (base.news?.posts ?? overlayNewsPosts),
+    },
+    careers: {
+      ...base.careers,
+      ...overlay.careers,
+      roles:
+        overlayCareerRoles && overlayCareerRoles.length > 0
+          ? overlayCareerRoles
+          : (base.careers?.roles ?? overlayCareerRoles),
+    },
+    images: { ...base.images, ...overlay.images },
+  };
+}
+
 /** Last loaded overrides (layout primes this so `img()` stays sync). */
 export function peekOverrides(): SiteOverrides | null {
   return snapshot;
 }
 
 export async function readOverrides(): Promise<SiteOverrides> {
+  const fromFs = await readFromFs();
+
   if (blobEnabled()) {
     try {
       const fromBlob = await readFromBlob();
       if (fromBlob) {
-        snapshot = fromBlob;
-        return fromBlob;
+        // Blob wins for CMS edits; committed file seeds empty news/careers lists.
+        const merged = mergeOverrides(fromFs, fromBlob);
+        snapshot = merged;
+        return merged;
       }
     } catch (error) {
       console.error("[cms] blob read failed, falling back to committed file", error);
     }
   }
 
-  const fromFs = await readFromFs();
   snapshot = fromFs;
   return fromFs;
 }

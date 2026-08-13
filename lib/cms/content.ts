@@ -507,7 +507,8 @@ export function buildContent(o: SiteOverrides) {
     })(),
     news: (() => {
       const n = o.news ?? {};
-      const source = n.posts === undefined ? DEFAULT_NEWS_POSTS : n.posts;
+      // Empty arrays from an older Blob save must not wipe seed posts.
+      const source = n.posts?.length ? n.posts : DEFAULT_NEWS_POSTS;
       const posts = source.map((post, i) => {
         const slug = (post.slug ?? `post-${i + 1}`).trim() || `post-${i + 1}`;
         const category = (NEWS_CATEGORIES as readonly string[]).includes(post.category ?? "")
@@ -539,7 +540,8 @@ export function buildContent(o: SiteOverrides) {
     })(),
     careers: (() => {
       const c = o.careers ?? {};
-      const source = c.roles === undefined ? DEFAULT_CAREERS_ROLES : c.roles;
+      // Empty arrays from an older Blob save must not wipe seed roles.
+      const source = c.roles?.length ? c.roles : DEFAULT_CAREERS_ROLES;
       const roles = source.map((role, i) => {
         const slug = (role.slug ?? `role-${i + 1}`).trim() || `role-${i + 1}`;
         const type = (ROLE_TYPES as readonly string[]).includes(role.type ?? "")
