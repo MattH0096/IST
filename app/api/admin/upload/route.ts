@@ -1,12 +1,10 @@
 import { randomBytes } from "crypto";
-import { promises as fs } from "fs";
-import path from "path";
 
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 
 import { isAuthenticated } from "@/lib/cms/auth";
-import { patchOverrides, uploadsDir } from "@/lib/cms/store";
+import { patchOverrides, putUpload } from "@/lib/cms/store";
 
 export const runtime = "nodejs";
 
@@ -35,12 +33,8 @@ export async function POST(request: Request) {
   }
 
   const bytes = Buffer.from(await file.arrayBuffer());
-  const dir = uploadsDir();
-  await fs.mkdir(dir, { recursive: true });
-
   const id = randomBytes(6).toString("hex");
   const filename = `${key.replace(/[^a-z0-9-_]/gi, "-")}-${id}.webp`;
-  const outPath = path.join(dir, filename);
 
   const pipeline = sharp(bytes).rotate().resize({
     width: 2400,
@@ -49,15 +43,27 @@ export async function POST(request: Request) {
     withoutEnlargement: true,
   });
   const { data, info } = await pipeline.webp({ quality: 82 }).toBuffer({ resolveWithObject: true });
-  await fs.writeFile(outPath, data);
+
+  let src: string;
+  try {
+    src = await putUpload(filename, data, "image/webp");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Upload failed.";
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
 
   const asset = {
-    src: `/uploads/${filename}`,
+    src,
     width: info.width,
     height: info.height,
   };
 
-  await patchOverrides({ images: { [key]: asset } });
+  try {
+    await patchOverrides({ images: { [key]: asset } });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Upload failed.";
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
   const { revalidatePath } = await import("next/cache");
   revalidatePath("/", "layout");
 

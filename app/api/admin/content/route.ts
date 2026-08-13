@@ -25,8 +25,14 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid payload." }, { status: 400 });
   }
 
-  const saved = await patchOverrides(body);
-  revalidatePath("/", "layout");
-  const content = await getSiteContent();
-  return NextResponse.json({ ok: true, overrides: saved, content });
+  try {
+    const saved = await patchOverrides(body);
+    revalidatePath("/", "layout");
+    const content = await getSiteContent();
+    return NextResponse.json({ ok: true, overrides: saved, content });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Save failed.";
+    console.error("[admin/content] save failed", error);
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
 }

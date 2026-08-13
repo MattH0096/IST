@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { AerospaceField } from "@/components/ui/AerospaceField";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { readOverrides } from "@/lib/cms/store";
 import { fontVariables } from "@/lib/fonts";
 import { COMPANY_NAME } from "@/lib/site";
 
@@ -29,7 +30,8 @@ export const viewport: Viewport = {
  * Lenis owns smooth scrolling (see SmoothScroll). Keep scroll-padding for
  * sticky nav; native CSS smooth scroll is disabled while Lenis is active.
  */
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  await readOverrides();
   return (
     <html lang="en" className={fontVariables} suppressHydrationWarning>
       <body>

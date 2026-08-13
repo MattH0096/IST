@@ -22,8 +22,8 @@ export default async function AdminDashboardPage() {
     <div>
       <h1 className="text-[1.75rem] font-semibold tracking-tight">Content</h1>
       <p className="mt-2 max-w-2xl text-[0.95rem] text-ist-muted">
-        Choose a page to edit. Changes save to <code className="font-mono">content/overrides.json</code>{" "}
-        and appear on the live site immediately after refresh.
+        Choose a page to edit. On Vercel, saves go to Blob storage (not a local
+        file). After saving, refresh the public page to see changes.
       </p>
       {content.updatedAt ? (
         <p className="mt-3 font-mono text-[0.7rem] text-ist-dim">
