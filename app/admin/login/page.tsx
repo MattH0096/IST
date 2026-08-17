@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 import { isAuthenticated } from "@/lib/cms/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminLoginPage() {
   if (await isAuthenticated()) redirect("/admin");
 

@@ -18,6 +18,8 @@ import { ADMIN_PAGES } from "@/lib/cms/types";
 import manifest from "@/lib/generated/image-manifest.json";
 import type { ImageAsset, ImageKey } from "@/lib/images";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ page: string }> };
 
 export default async function AdminPageEditor({ params }: Props) {

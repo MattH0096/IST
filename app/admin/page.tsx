@@ -5,6 +5,8 @@ import { isAuthenticated, isAdminConfigured } from "@/lib/cms/auth";
 import { getSiteContent } from "@/lib/cms/content";
 import { ADMIN_PAGES } from "@/lib/cms/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardPage() {
   if (!isAdminConfigured()) {
     return (

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { AdminLogout } from "@/components/admin/AdminLogout";
 import { isAuthenticated, isAdminConfigured } from "@/lib/cms/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "IST Admin",
   robots: { index: false, follow: false },
