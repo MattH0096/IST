@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var r=window.matchMedia('(prefers-reduced-motion: reduce)').matches;d.setAttribute('data-motion',r?'reduce':'on');if(!r&&sessionStorage.getItem('ist-boot-loader-v2')!=='1'){d.setAttribute('data-loader','on');d.setAttribute('data-boot','1');}}catch(e){document.documentElement.setAttribute('data-motion','on');}})();`,
+            __html: `(function(){try{var r=window.matchMedia('(prefers-reduced-motion: reduce)').matches;document.documentElement.setAttribute('data-motion',r?'reduce':'on');}catch(e){document.documentElement.setAttribute('data-motion','on');}})();`,
           }}
         />
         <a

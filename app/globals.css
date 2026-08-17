@@ -1906,53 +1906,6 @@ main section.section-y.bg-ist-surface {
   filter: blur(10px);
 }
 
-/* Boot: dissolve through black — no blur/scale on the cover. */
-.logo-loader--boot-video.logo-loader--exit {
-  transform: none;
-  filter: none;
-  transition: opacity 820ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.logo-loader--boot-video {
-  /* Match homepage hero: one svh plane, not a different mobile 100vh box. */
-  inset: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100svh;
-  min-height: 100svh;
-  background: #030303;
-}
-
-.logo-loader__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  background: #030303;
-}
-
-.logo-loader__blackout {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1100ms cubic-bezier(0.33, 0, 0.2, 1);
-}
-
-.logo-loader__blackout--on {
-  opacity: 1;
-}
-
-.logo-loader__boot-panel--dim {
-  opacity: 0;
-  transition: opacity 700ms cubic-bezier(0.33, 0, 0.2, 1);
-}
-
 .logo-loader__veil {
   position: absolute;
   inset: 0;
@@ -1982,20 +1935,6 @@ main section.section-y.bg-ist-surface {
 
 html[data-loader="on"] {
   overflow: hidden;
-}
-
-/* Paint a black veil before React mounts so the homepage never flashes under boot. */
-html[data-boot="1"] body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100svh;
-  min-height: 100svh;
-  z-index: 199;
-  background: #030303;
-  pointer-events: none;
 }
 
 .logo-stream {

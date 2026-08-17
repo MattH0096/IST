@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 import { COMPANY_NAME } from "@/lib/site";
 
 type Props = {
-  mode?: "boot" | "route";
+  mode?: "route";
   className?: string;
 };
 
@@ -14,7 +14,7 @@ type Props = {
  * Cinematic loader: light filaments + energy fill the exact IST lockup mask,
  * then the official logo settles. Same mark as nav/footer (`/img/logo.png`).
  */
-export function LogoStream({ mode = "boot", className }: Props) {
+export function LogoStream({ mode = "route", className }: Props) {
   return (
     <div
       className={cn("logo-stream", mode === "route" && "logo-stream--route", className)}
